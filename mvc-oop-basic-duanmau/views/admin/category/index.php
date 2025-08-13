@@ -33,7 +33,6 @@
                 <thead>
                     <tr>
                         <th width="5%">ID</th>
-                        <th width="15%">Hình ảnh</th>
                         <th width="40%">Tên danh mục</th>
                         <th width="15%">Thao tác</th>
                     </tr>
@@ -43,13 +42,6 @@
                         <?php foreach ($categories as $category): ?>
                             <tr>
                                 <td><?php echo $category['id']; ?></td>
-                                <td>
-                                    <?php if (!empty($category['image'])): ?>
-                                        <img src="<?php echo $category['image']; ?>" alt="<?php echo htmlspecialchars($category['name']); ?>" class="img-thumbnail" style="max-width: 80px; max-height: 80px;">
-                                    <?php else: ?>
-                                        <img src="https://via.placeholder.com/80x80?text=No+Image" alt="No Image" class="img-thumbnail" style="max-width: 80px; max-height: 80px;">
-                                    <?php endif; ?>
-                                </td>
                                 <td><?php echo htmlspecialchars($category['name']); ?></td>
                                 <td>
                                     <a href="index.php?act=admin-category-edit&id=<?php echo $category['id']; ?>" class="btn btn-sm btn-info mb-1">

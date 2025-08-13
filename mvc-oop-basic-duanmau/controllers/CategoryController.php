@@ -19,7 +19,6 @@ class CategoryController
         $limit = 5;
         
         $categories = $this->modelCategory->getAllCategories($keyword, $page, $limit);
-        
         $totalCategories = $this->modelCategory->countCategories($keyword);
         $totalPages = ceil($totalCategories / $limit);
         
@@ -39,25 +38,10 @@ class CategoryController
     public function store()
     {
         $name = trim($_POST['name'] ?? '');
-        $image = null;
-
         $errors = [];
+
         if (empty($name)) {
             $errors[] = "Tên danh mục không được để trống";
-        }
-
-        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-            $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            
-            if (!in_array($ext, $allowed)) {
-                $errors[] = "Chỉ chấp nhận file hình ảnh (jpg, jpeg, png, gif, webp)";
-            } else {
-                $image = uploadFile($_FILES['image'], '/uploads/categories/');
-                if (!$image) {
-                    $errors[] = "Không thể upload hình ảnh, vui lòng thử lại";
-                }
-            }
         }
 
         if (!empty($errors)) {
@@ -67,15 +51,12 @@ class CategoryController
             exit;
         }
 
-        $result = $this->modelCategory->addCategory($name, null, $image);
+        $result = $this->modelCategory->addCategory($name);
 
         if ($result) {
             $_SESSION['success'] = "Thêm danh mục thành công";
         } else {
             $_SESSION['errors'] = ["Thêm danh mục thất bại"];
-            if ($image) {
-                deleteFile($image);
-            }
         }
 
         header('Location: index.php?act=admin-categories');
@@ -104,9 +85,8 @@ class CategoryController
     {
         $id = $_POST['id'] ?? 0;
         $name = trim($_POST['name'] ?? '');
-        $image = null;
-
         $errors = [];
+
         if (empty($id)) {
             $errors[] = "ID danh mục không hợp lệ";
         }
@@ -119,20 +99,6 @@ class CategoryController
             $errors[] = "Danh mục không tồn tại";
         }
 
-        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-            $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-            $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            
-            if (!in_array($ext, $allowed)) {
-                $errors[] = "Chỉ chấp nhận file hình ảnh (jpg, jpeg, png, gif, webp)";
-            } else {
-                $image = uploadFile($_FILES['image'], '/uploads/categories/');
-                if (!$image) {
-                    $errors[] = "Không thể upload hình ảnh, vui lòng thử lại";
-                }
-            }
-        }
-
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old_data'] = $_POST;
@@ -140,17 +106,11 @@ class CategoryController
             exit;
         }
 
-        $result = $this->modelCategory->updateCategory($id, $name, null, $image);
+        $result = $this->modelCategory->updateCategory($id, $name);
 
         if ($result) {
-            if ($image && !empty($category['image'])) {
-                deleteFile($category['image']);
-            }
             $_SESSION['success'] = "Cập nhật danh mục thành công";
         } else {
-            if ($image) {
-                deleteFile($image);
-            }
             $_SESSION['errors'] = ["Cập nhật danh mục thất bại"];
         }
 
