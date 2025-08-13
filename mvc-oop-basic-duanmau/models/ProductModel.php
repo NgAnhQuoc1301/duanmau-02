@@ -130,21 +130,17 @@ class ProductModel
     }
 
     // Xóa sản phẩm
-    public function deleteProduct($id)
-    {
-        $product = $this->getProductById($id);
+    public function deleteProduct($id){
+    // Xóa bình luận trước
+    $sql1 = "DELETE FROM comments WHERE product_id = :id";
+    $stmt1 = $this->conn->prepare($sql1);
+    $stmt1->execute(['id' => $id]);
 
-        $sql = "DELETE FROM products WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
-        $result = $stmt->execute();
-
-        if ($result && $product['image'] && file_exists($product['image'])) {
-            unlink($product['image']);
-        }
-
-        return $result;
-    }
+    // Sau đó xóa sản phẩm
+    $sql2 = "DELETE FROM products WHERE id = :id";
+    $stmt2 = $this->conn->prepare($sql2);
+    return $stmt2->execute(['id' => $id]);
+}
 
     // Tìm kiếm sản phẩm
     public function searchProducts($keyword, $limit = null, $offset = 0)

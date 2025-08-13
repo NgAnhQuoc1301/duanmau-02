@@ -1,3 +1,10 @@
+<?php
+// Khởi tạo các biến nếu chưa có để tránh cảnh báo
+$user_name = $user_name ?? '';
+$favorite_products = $favorite_products ?? [];
+$recent_comments = $recent_comments ?? [];
+$new_products = $new_products ?? [];
+?>
 <div class="container mt-4">
     <!-- Welcome Section -->
     <div class="row mb-4">

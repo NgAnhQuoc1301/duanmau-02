@@ -142,5 +142,12 @@ class UserController
     exit;
 }
 
+public function dashboard() {
+    $user_name = $_SESSION['user_name'] ?? '';
+    $title = "Dashboard người dùng";
+    $view = './views/user/dashboard.php';
+    require_once './views/layout.php';
+}
+
 }
 ?>

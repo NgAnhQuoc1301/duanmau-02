@@ -41,7 +41,6 @@
             </div>
         </div>
         
-        <!-- Chỉ hiển thị giá gốc, không có sale_price -->
         <div class="mb-4">
             <div class="d-flex align-items-center">
                 <h3 class="text-danger me-3"><?php echo number_format($product['price'], 0, ',', '.'); ?>đ</h3>
@@ -52,8 +51,6 @@
             <h5 class="mb-3">Mô tả:</h5>
             <p><?php echo $product['description'] ?? 'Không có mô tả'; ?></p>
         </div>
-        
-        <!-- Đã xóa phần trạng thái -->
 
         <div class="mb-4">
             <h5 class="mb-3">Số lượng:</h5>
@@ -83,6 +80,148 @@
         </div>
     </div>
 </div>
+
+<?php
+// Lấy dữ liệu bình luận đã duyệt cho sản phẩm này
+$product_comments = $this->modelComment->getCommentsByProduct($product['id']);
+$show_limit = 2; // chỉ hiện 2 bình luận đầu tiên
+?>
+<div id="comment-section" class="mb-5">
+    <h4>Viết bình luận của bạn</h4>
+
+    <?php if (isset($_SESSION['user_id'])): ?>
+    <form id="commentForm">
+        <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+        <div class="mb-3">
+            <textarea name="content" class="form-control" rows="3" placeholder="Nhập bình luận..." required></textarea>
+        </div>
+        <div class="mb-3 w-25">
+            <select name="rating" class="form-select">
+                <option value="5">5 ⭐</option>
+                <option value="4">4 ⭐</option>
+                <option value="3">3 ⭐</option>
+                <option value="2">2 ⭐</option>
+                <option value="1">1 ⭐</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Gửi bình luận</button>
+    </form>
+    <?php else: ?>
+        <p class="text-muted">Vui lòng <a href="index.php?act=login">đăng nhập</a> để bình luận.</p>
+    <?php endif; ?>
+
+    <div id="comment-list" class="mt-4">
+        <?php
+        $total_comments = count($product_comments);
+        foreach(array_slice($product_comments, 0, $show_limit) as $comment):
+            $short_content = strlen($comment['content']) > 120 ? substr($comment['content'],0,120) . '...' : $comment['content'];
+            $is_truncated = strlen($comment['content']) > 120;
+        ?>
+        <div class="border p-2 mb-2 comment-item">
+            <strong><?php echo htmlspecialchars($comment['user_name']); ?></strong> - 
+            <small><?php echo date('d/m/Y H:i', strtotime($comment['created_at'])); ?></small>
+            <div>
+                <i class="fas fa-star text-warning"></i> <?php echo $comment['rating']; ?>/5
+            </div>
+            <p class="comment-content" data-full="<?php echo htmlspecialchars($comment['content']); ?>">
+                <?php echo htmlspecialchars($short_content); ?>
+                <?php if($is_truncated): ?>
+                    <a href="#" class="toggle-comment">Xem thêm</a>
+                <?php endif; ?>
+            </p>
+        </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if($total_comments > $show_limit): ?>
+        <button id="show-all-comments" class="btn btn-link p-0">Xem tất cả bình luận (<?php echo $total_comments; ?>)</button>
+    <?php endif; ?>
+</div>
+
+<script>
+document.getElementById('commentForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+    const formData = new FormData(form);
+
+    fetch('index.php?act=comment-add', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            const commentList = document.getElementById('comment-list');
+            const div = document.createElement('div');
+            div.className = 'border p-2 mb-2 comment-item';
+
+            let shortContent = data.content.length > 120 ? data.content.substr(0,120) + '...' : data.content;
+            let toggle = data.content.length > 120 ? ' <a href="#" class="toggle-comment">Xem thêm</a>' : '';
+
+            div.innerHTML = `<strong>${data.user_name}</strong> - <small>${data.created_at}</small>
+                             <div><i class="fas fa-star text-warning"></i> ${data.rating}/5</div>
+                             <p class="comment-content" data-full="${data.content}">${shortContent}${toggle}</p>`;
+            commentList.prepend(div);
+            form.reset();
+
+            // Thêm sự kiện xem thêm cho bình luận mới
+            div.querySelectorAll('.toggle-comment').forEach(link => {
+                link.addEventListener('click', function(e){
+                    e.preventDefault();
+                    const p = this.closest('.comment-content');
+                    p.textContent = p.dataset.full;
+                });
+            });
+        } else {
+            alert(data.errors?.join("\n") || "Có lỗi xảy ra, vui lòng thử lại!");
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Có lỗi xảy ra, vui lòng thử lại!");
+    });
+});
+
+// Xem thêm nội dung bình luận
+document.querySelectorAll('.toggle-comment').forEach(link => {
+    link.addEventListener('click', function(e){
+        e.preventDefault();
+        const p = this.closest('.comment-content');
+        p.textContent = p.dataset.full;
+    });
+});
+
+// Hiển thị tất cả bình luận khi click
+document.getElementById('show-all-comments')?.addEventListener('click', function() {
+    const commentList = document.getElementById('comment-list');
+    commentList.innerHTML = '';
+    const allComments = <?php echo json_encode($product_comments); ?>;
+    allComments.forEach(comment => {
+        const div = document.createElement('div');
+        div.className = 'border p-2 mb-2 comment-item';
+        let shortContent = comment.content.length > 120 ? comment.content.substr(0,120) + '...' : comment.content;
+        let toggle = comment.content.length > 120 ? ' <a href="#" class="toggle-comment">Xem thêm</a>' : '';
+        div.innerHTML = `<strong>${comment.user_name}</strong> - <small>${new Date(comment.created_at).toLocaleString('vi-VN')}</small>
+                         <div><i class="fas fa-star text-warning"></i> ${comment.rating}/5</div>
+                         <p class="comment-content" data-full="${comment.content}">${shortContent}${toggle}</p>`;
+        commentList.appendChild(div);
+    });
+
+    // Thêm sự kiện Xem thêm cho tất cả bình luận
+    document.querySelectorAll('.toggle-comment').forEach(link => {
+        link.addEventListener('click', function(e){
+            e.preventDefault();
+            const p = this.closest('.comment-content');
+            p.textContent = p.dataset.full;
+        });
+    });
+
+    this.style.display = 'none'; // ẩn nút sau khi show tất cả
+});
+</script>
 
 <!-- Sản phẩm liên quan -->
 <?php if (!empty($relatedProducts)): ?>
