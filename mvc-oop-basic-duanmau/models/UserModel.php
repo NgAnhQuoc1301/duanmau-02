@@ -1,5 +1,5 @@
 <?php
-// Class chứa các function thực thi tương tác với cơ sở dữ liệu cho người dùng
+// Class chứa các function tương tác với cơ sở dữ liệu cho người dùng
 class UserModel 
 {
     public $conn;
@@ -12,13 +12,32 @@ class UserModel
         }
     }
 
-    // Lấy tất cả người dùng
-    public function getAllUsers()
+    // Lấy tất cả người dùng (có tìm kiếm và phân trang)
+    public function getAllUsers($keyword = '', $page = 1, $limit = 5)
     {
-        $sql = "SELECT * FROM users ORDER BY id DESC";
+        $offset = ($page - 1) * $limit;
+        $sql = "SELECT * FROM users 
+                WHERE username LIKE :keyword OR email LIKE :keyword
+                ORDER BY id DESC
+                LIMIT :offset, :limit";
         $stmt = $this->conn->prepare($sql);
+        $searchKeyword = "%$keyword%";
+        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Đếm tổng số user (hỗ trợ tìm kiếm)
+    public function countUsers($keyword = '')
+    {
+        $sql = "SELECT COUNT(*) FROM users WHERE username LIKE :keyword OR email LIKE :keyword";
+        $stmt = $this->conn->prepare($sql);
+        $searchKeyword = "%$keyword%";
+        $stmt->bindParam(':keyword', $searchKeyword, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchColumn();
     }
 
     // Lấy người dùng theo ID
@@ -26,9 +45,9 @@ class UserModel
     {
         $sql = "SELECT * FROM users WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Lấy người dùng theo email
@@ -36,45 +55,36 @@ class UserModel
     {
         $sql = "SELECT * FROM users WHERE email = :email";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Thêm người dùng mới
     public function addUser($username, $email, $password, $role = 'user')
-    {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (username, email, password, role, created_at) VALUES (:username, :email, :password, :role, NOW())";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $hashedPassword);
-        $stmt->bindParam(':role', $role);
-        return $stmt->execute();
-    }
+{
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    $sql = "INSERT INTO users (username, email, password, role) 
+            VALUES (:username, :email, :password, :role)";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+    $stmt->bindParam(':password', $hashedPassword, PDO::PARAM_STR);
+    $stmt->bindParam(':role', $role, PDO::PARAM_STR);
+    return $stmt->execute();
+}
 
     // Cập nhật người dùng
     public function updateUser($id, $username, $email, $role = 'user')
     {
         $sql = "UPDATE users SET username = :username, email = :email, role = :role WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':role', $role);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':role', $role, PDO::PARAM_STR);
         return $stmt->execute();
     }
-
-    // Xóa người dùng
-    public function deleteUser($id)
-    {
-        $sql = "DELETE FROM users WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
-    }
-
     // Đăng nhập
     public function login($email, $password)
     {
@@ -84,5 +94,13 @@ class UserModel
         }
         return false;
     }
+    public function getUserByUsername($username)
+{
+    $sql = "SELECT * FROM users WHERE username = :username";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
-?> 
+}
+?>

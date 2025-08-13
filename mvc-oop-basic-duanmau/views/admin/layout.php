@@ -110,7 +110,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="index.php?act=admin-user" class="nav-link <?php echo (isset($_GET['act']) && strpos($_GET['act'], 'admin-users') !== false) ? 'active' : ''; ?>">
+                            <a href="index.php?act=admin-users" class="nav-link <?php echo (isset($_GET['act']) && strpos($_GET['act'], 'admin-users') !== false) ? 'active' : ''; ?>">
                                 <i class="fas fa-users"></i> Quản lý người dùng
                             </a>
                         </li>

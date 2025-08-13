@@ -93,9 +93,9 @@
                             Danh mục
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="index.php?act=category&id=1">Danh mục 1</a></li>
-                            <li><a class="dropdown-item" href="index.php?act=category&id=2">Danh mục 2</a></li>
-                            <li><a class="dropdown-item" href="index.php?act=category&id=3">Danh mục 3</a></li>
+                            <li><a class="dropdown-item" href="index.php?act=category&id=1">Áo Thun</a></li>
+                            <li><a class="dropdown-item" href="index.php?act=category&id=2">Sơ Mi</a></li>
+                            <li><a class="dropdown-item" href="index.php?act=category&id=3">Quần Jeans</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -113,8 +113,9 @@
                                     <li><a class="dropdown-item" href="index.php?act=admin-products">Quản lý sản phẩm</a></li>
                                     <li><a class="dropdown-item" href="index.php?act=admin-categories">Quản lý danh mục</a></li>
                                     <li><a class="dropdown-item" href="index.php?act=admin-comments">Quản lý bình luận</a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="index.php?act=admin-users">Quản lý người dùng</a></li>
                                 <?php endif; ?>
+                                <hr>
                                 <li><a class="dropdown-item" href="index.php?act=user-dashboard">Dashboard</a></li>
                                 <li><a class="dropdown-item" href="index.php?act=user-profile">Hồ sơ</a></li>
                                 <li><a class="dropdown-item" href="index.php?act=user-orders">Đơn hàng</a></li>

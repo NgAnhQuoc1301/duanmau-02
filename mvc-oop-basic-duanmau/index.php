@@ -78,7 +78,12 @@ match ($act) {
     'admin-comment-update'=> (new CommentController())->update(),
     'admin-comment-delete'=> (new CommentController())->delete(),
     'comment-add'=>(new CommentController())->add(),
-    
+    // Quản lý người dùng
+    'admin-users'=> (new UserController())->index(),
+    'admin-user-create'=> (new UserController())->create(),
+    'admin-user-store'=> (new UserController())->store(),
+    'admin-user-edit'=> (new UserController())->edit(),
+    'admin-user-update'=> (new UserController())->update(),
     // ===== USER ROUTES =====
     'user-dashboard'=> (new UserController())->dashboard(),
     'user-profile'=> (new UserController())->profile(),

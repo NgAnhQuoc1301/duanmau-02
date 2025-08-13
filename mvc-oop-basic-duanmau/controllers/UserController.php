@@ -1,89 +1,146 @@
 <?php
-// Class chứa các function thực thi xử lý logic cho user dashboard
 class UserController
 {
-    public $modelProduct;
-    public $modelCategory;
-    public $modelComment;
+    public $modelUser;
 
     public function __construct()
     {
-        $this->modelProduct = new ProductModel();
-        $this->modelCategory = new CategoryModel();
-        $this->modelComment = new CommentModel();
+        $this->modelUser = new UserModel();
     }
 
-    // Dashboard cho user
-    public function dashboard()
+    // Hiển thị danh sách user
+    public function index()
     {
-        // Kiểm tra đăng nhập
-        AuthController::requireUser();
-        
-        // Lấy thông tin user
-        $user_id = $_SESSION['user_id'];
-        $user_name = $_SESSION['user_name'];
-        
-        // Lấy sản phẩm yêu thích (có thể là sản phẩm đã comment)
-        $favorite_products = $this->modelProduct->getProductsByUserComments($user_id);
-        
-        // Lấy comment gần đây của user
-        $recent_comments = $this->modelComment->getCommentsByUser($user_id, 5);
-        
-        // Lấy sản phẩm mới
-        $new_products = $this->modelProduct->getNewProducts(6);
-        
-        // Lấy danh mục
-        $categories = $this->modelCategory->getAllCategories();
-        
-        $title = "Dashboard - " . $user_name;
-        $view = './views/user/dashboard.php';
-        require_once './views/layout.php';
+        AuthController::requireAdmin();
+
+        $keyword = $_GET['keyword'] ?? '';
+        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+        $limit = 5;
+
+        $users = $this->modelUser->getAllUsers($keyword, $page, $limit);
+        $totalUsers = $this->modelUser->countUsers($keyword);
+        $totalPages = ceil($totalUsers / $limit);
+
+        $title = "Quản lý người dùng";
+        $view = './views/admin/user/index.php';
+        require_once './views/admin/layout.php';
     }
 
-    // Trang hồ sơ user
-    public function profile()
+    // Thêm user mới
+    public function create()
     {
-        // Kiểm tra đăng nhập
-        AuthController::requireUser();
-        
-        $user_id = $_SESSION['user_id'];
-        $user_name = $_SESSION['user_name'];
-        $user_email = $_SESSION['user_email'];
-        
-        $title = "Hồ sơ - " . $user_name;
-        $view = './views/user/profile.php';
-        require_once './views/layout.php';
+        AuthController::requireAdmin();
+
+        $title = "Thêm người dùng mới";
+        $view = './views/admin/user/create.php';
+        require_once './views/admin/layout.php';
     }
 
-    // Trang đơn hàng của user
-    public function orders()
+    // Xử lý thêm người dùng mới
+    public function store()
     {
-        // Kiểm tra đăng nhập
-        AuthController::requireUser();
-        
-        $user_id = $_SESSION['user_id'];
-        $user_name = $_SESSION['user_name'];
-        
-        $title = "Đơn hàng của tôi";
-        $view = './views/user/orders.php';
-        require_once './views/layout.php';
+        $username = trim($_POST['username'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
+        $role = $_POST['role'] ?? 'user';
+
+        $errors = [];
+
+        if (empty($username)) $errors[] = "Tên người dùng không được để trống";
+        if (empty($email)) $errors[] = "Email không được để trống";
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Email không hợp lệ";
+        if (empty($password)) $errors[] = "Mật khẩu không được để trống";
+        if ($password !== $confirm_password) $errors[] = "Xác nhận mật khẩu không khớp";
+
+        if ($this->modelUser->getUserByEmail($email)) {
+            $errors[] = "Email đã được sử dụng";
+        }
+
+        if ($this->modelUser->getUserByUsername($username)) {
+             $errors[] = "Tên người dùng đã được sử dụng";
     }
 
-    // Trang sản phẩm yêu thích
-    public function favorites()
-    {
-        // Kiểm tra đăng nhập
-        AuthController::requireUser();
-        
-        $user_id = $_SESSION['user_id'];
-        $user_name = $_SESSION['user_name'];
-        
-        // Lấy sản phẩm yêu thích (dựa trên comment)
-        $favorite_products = $this->modelProduct->getProductsByUserComments($user_id);
-        
-        $title = "Sản phẩm yêu thích";
-        $view = './views/user/favorites.php';
-        require_once './views/layout.php';
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old_data'] = $_POST;
+            header('Location: index.php?act=admin-user-create');
+            exit;
+        }
+
+        $result = $this->modelUser->addUser($username, $email, $password, $role);
+
+        if ($result) {
+            $_SESSION['success'] = "Thêm người dùng thành công";
+        } else {
+            $_SESSION['errors'] = ["Thêm người dùng thất bại"];
+        }
+
+        header('Location: index.php?act=admin-users');
+        exit;
     }
+
+    // Edit user
+    public function edit()
+    {
+        AuthController::requireAdmin();
+
+        $id = $_GET['id'] ?? 0;
+        $user = $this->modelUser->getUserById($id);
+        if (!$user) {
+            $_SESSION['errors'] = ["Người dùng không tồn tại"];
+            header("Location: index.php?act=admin-users");
+            exit;
+        }
+
+        $title = "Chỉnh sửa người dùng";
+        $view = './views/admin/user/edit.php';
+        require_once './views/admin/layout.php';
+    }
+
+    public function update()
+{
+    $id = $_POST['id'] ?? 0;
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $role = $_POST['role'] ?? null; // role từ form
+    $errors = [];
+
+    if (!$id) $errors[] = "ID người dùng không hợp lệ";
+    if (!$username) $errors[] = "Tên đăng nhập không được để trống";
+    if (!$email) $errors[] = "Email không được để trống";
+
+    if (!empty($errors)) {
+        $_SESSION['errors'] = $errors;
+        $_SESSION['old_data'] = $_POST;
+        header("Location: index.php?act=admin-user-edit&id=$id");
+        exit;
+    }
+
+    // Lấy user cũ
+    $oldUser = $this->modelUser->getUserById($id);
+    if (!$oldUser) {
+        $_SESSION['errors'] = ["Người dùng không tồn tại"];
+        header("Location: index.php?act=admin-users");
+        exit;
+    }
+
+    // Nếu role null thì giữ role cũ
+    if (!$role) {
+        $role = $oldUser['role'];
+    }
+
+    $result = $this->modelUser->updateUser($id, $username, $email, $role);
+
+    if ($result) {
+        $_SESSION['success'] = "Cập nhật người dùng thành công";
+    } else {
+        $_SESSION['errors'] = ["Cập nhật người dùng thất bại"];
+    }
+
+    header("Location: index.php?act=admin-users");
+    exit;
 }
-?> 
+
+}
+?>

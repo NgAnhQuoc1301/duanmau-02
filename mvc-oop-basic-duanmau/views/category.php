@@ -34,15 +34,15 @@
                     <h6 class="fw-bold mb-3">Danh mục con</h6>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" id="subcategory1">
-                        <label class="form-check-label" for="subcategory1">Danh mục con 1</label>
+                        <label class="form-check-label" for="subcategory1">T-Shirt</label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" id="subcategory2">
-                        <label class="form-check-label" for="subcategory2">Danh mục con 2</label>
+                        <label class="form-check-label" for="subcategory2">Áo Sơ Mi</label>
                     </div>
                     <div class="form-check mb-2">
                         <input class="form-check-input" type="checkbox" id="subcategory3">
-                        <label class="form-check-label" for="subcategory3">Danh mục con 3</label>
+                        <label class="form-check-label" for="subcategory3">Quần Jeans</label>
                     </div>
                 </div>
                 

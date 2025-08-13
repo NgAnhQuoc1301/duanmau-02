@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Danh sách người dùng</h5>
-        <a href="index.php?act=admin-user-add" class="btn btn-primary btn-sm">Thêm người dùng</a>
+        <a href="index.php?act=admin-user-create" class="btn btn-primary btn-sm">Thêm người dùng</a>
     </div>
     <div class="card-body">
         <?php if (!empty($_SESSION['success'])): ?>
@@ -38,7 +38,6 @@
                                 <td><?= htmlspecialchars($user['role']) ?></td>
                                 <td>
                                     <a href="index.php?act=admin-user-edit&id=<?= $user['id'] ?>" class="btn btn-info btn-sm">Sửa</a>
-                                    <a href="index.php?act=admin-user-delete&id=<?= $user['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Bạn chắc chắn muốn xóa người dùng này?')">Xóa</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
