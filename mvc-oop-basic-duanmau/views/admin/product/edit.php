@@ -43,11 +43,6 @@
                         </div>
                     </div>
 
-                    <!-- Mô tả sản phẩm, nếu không có trong DB thì bỏ trống -->
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Mô tả sản phẩm</label>
-                        <textarea class="form-control" id="description" name="description" rows="5"><?php echo htmlspecialchars($_SESSION['old_data']['description'] ?? ($product['description'] ?? '')); ?></textarea>
-                    </div>
                 </div>
 
                 <div class="col-md-4">

@@ -51,13 +51,19 @@ if (!isset($products)) {
                                         ?>
                                     </td>
                                     <td>
-                                        <?php 
-                                        // Nếu không có trường status thì hiển thị dấu "-"
-                                        echo isset($product['status']) 
-                                            ? ($product['status'] == 1 ? 'Hiển thị' : 'Ẩn') 
-                                            : '-'; 
-                                        ?>
-                                    </td>
+                                <?php 
+                                echo isset($product['category_name']) 
+                                    ? $product['category_name'] 
+                                    : '-';
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                echo isset($product['status']) 
+                                    ? ($product['status'] == 1 ? 'Hiển thị' : 'Ẩn') 
+                                    : '-'; 
+                                ?>
+                            </td>
                                 <td>
                                     <a href="index.php?act=admin-product-edit&id=<?php echo $product['id']; ?>" class="btn btn-sm btn-info">
                                         <i class="fas fa-edit"></i>

@@ -30,12 +30,11 @@
         
         <div class="table-responsive">
             <table class="table table-striped table-hover">
-                <thead>õ ae mình xem được
-                                        <tr>
+                <thead>
+                    <tr>
                         <th width="5%">ID</th>
                         <th width="15%">Hình ảnh</th>
                         <th width="40%">Tên danh mục</th>
-                        <th width="25%">Mô tả</th>
                         <th width="15%">Thao tác</th>
                     </tr>
                 </thead>
@@ -52,13 +51,6 @@
                                     <?php endif; ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($category['name']); ?></td>
-                                <td>
-                                    <?php if (!empty($category['description'])): ?>
-                                        <?php echo htmlspecialchars(substr($category['description'], 0, 50)) . (strlen($category['description']) > 50 ? '...' : ''); ?>
-                                    <?php else: ?>
-                                        <span class="text-muted">Không có mô tả</span>
-                                    <?php endif; ?>
-                                </td>
                                 <td>
                                     <a href="index.php?act=admin-category-edit&id=<?php echo $category['id']; ?>" class="btn btn-sm btn-info mb-1">
                                         <i class="fas fa-edit"></i>

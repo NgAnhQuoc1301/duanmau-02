@@ -34,11 +34,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Mô tả sản phẩm</label>
-                        <textarea class="form-control" id="description" name="description" rows="5"><?php echo $_SESSION['old_data']['description'] ?? ''; ?></textarea>
-                    </div>
                 </div>
                 
                 <div class="col-md-4">

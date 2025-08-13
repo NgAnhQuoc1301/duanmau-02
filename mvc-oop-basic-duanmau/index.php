@@ -80,10 +80,10 @@ match ($act) {
     'comment-add'=>(new CommentController())->add(),
     
     // ===== USER ROUTES =====
-    'user-dashboard'=>function() { (new UserController())->dashboard(); },
-    'user-profile'=>function() { (new UserController())->profile(); },
-    'user-orders'=>function() { (new UserController())->orders(); },
-    'user-favorites'=>function() { (new UserController())->favorites(); },
+    'user-dashboard'=> (new UserController())->dashboard(),
+    'user-profile'=> (new UserController())->profile(),
+    'user-orders'=> (new UserController())->orders(),
+    'user-favorites'=> (new UserController())->favorites(),
     
     // Mặc định về trang chủ
     default => (new ProductController())->Home(),

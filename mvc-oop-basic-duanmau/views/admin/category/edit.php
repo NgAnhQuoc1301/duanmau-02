@@ -13,13 +13,6 @@
                 <label for="name" class="form-label">Tên danh mục <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="name" name="name" value="<?php echo $_SESSION['old_data']['name'] ?? $category['name']; ?>" required>
             </div>
-            
-            <div class="mb-3">
-                <label for="description" class="form-label">Mô tả</label>
-                <textarea class="form-control" id="description" name="description" rows="3"><?php echo $_SESSION['old_data']['description'] ?? $category['description']; ?></textarea>
-                <div class="form-text">Mô tả ngắn gọn về danh mục (không bắt buộc)</div>
-            </div>
-            
             <div class="mb-3">
                 <label for="image" class="form-label">Hình ảnh</label>
                 <input type="file" class="form-control" id="image" name="image" accept="image/*">

@@ -1,8 +1,8 @@
-<?php 
-// Class chứa các function thực thi tương tác với cơ sở dữ liệu 
+<?php
 class ProductModel 
 {
     public $conn;
+
     public function __construct()
     {
         $this->conn = connectDB();
@@ -18,22 +18,22 @@ class ProductModel
                 FROM products p 
                 LEFT JOIN categories c ON p.category_id = c.id 
                 ORDER BY p.id DESC";
-        
+
         if ($limit !== null) {
             $sql .= " LIMIT :offset, :limit";
         }
-        
+
         $stmt = $this->conn->prepare($sql);
-        
+
         if ($limit !== null) {
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         }
-        
+
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     // Lấy sản phẩm theo ID
     public function getProductById($id)
     {
@@ -42,11 +42,11 @@ class ProductModel
                 LEFT JOIN categories c ON p.category_id = c.id 
                 WHERE p.id = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
     // Lấy sản phẩm theo danh mục
     public function getProductsByCategory($category_id, $limit = null, $offset = 0)
     {
@@ -55,102 +55,97 @@ class ProductModel
                 LEFT JOIN categories c ON p.category_id = c.id 
                 WHERE p.category_id = :category_id 
                 ORDER BY p.id DESC";
-        
+
         if ($limit !== null) {
             $sql .= " LIMIT :offset, :limit";
         }
-        
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':category_id', $category_id);
-        
+        $stmt->bindValue(':category_id', (int)$category_id, PDO::PARAM_INT);
+
         if ($limit !== null) {
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         }
-        
+
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     // Đếm tổng số sản phẩm
     public function countProducts($category_id = null)
     {
         $sql = "SELECT COUNT(*) as total FROM products";
-        
         if ($category_id !== null) {
             $sql .= " WHERE category_id = :category_id";
         }
-        
+
         $stmt = $this->conn->prepare($sql);
-        
+
         if ($category_id !== null) {
-            $stmt->bindParam(':category_id', $category_id);
+            $stmt->bindValue(':category_id', (int)$category_id, PDO::PARAM_INT);
         }
-        
+
         $stmt->execute();
-        $result = $stmt->fetch();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'];
     }
-    
     // Thêm sản phẩm mới
-    public function addProduct($name, $price, $image, $category_id)
+    public function addProduct($name, $price, $sale_price, $imagePath, $description, $category_id, $status)
     {
-        $sql = "INSERT INTO products (name, price, image, category_id) 
-                VALUES (:name, :price, :image, :category_id)";
+        if ($category_id === '' || $category_id === null) $category_id = null;
+
+        $sql = "INSERT INTO products (name, price, sale_price, image, description, category_id, status) 
+                VALUES (:name, :price, :sale_price, :image, :description, :category_id, :status)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':image', $image);
-        $stmt->bindParam(':category_id', $category_id);
+        $stmt->bindParam(':sale_price', $sale_price);
+        $stmt->bindParam(':image', $imagePath);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->bindParam(':status', $status);
         return $stmt->execute();
     }
-    
+
     // Cập nhật sản phẩm
-    public function updateProduct($id, $name, $price, $sale_price, $description, $category_id, $status, $image = null)
-{
-    if ($image) {
+    public function updateProduct($id, $name, $price, $sale_price, $description, $category_id, $status, $imagePath)
+    {
+        if ($category_id === '' || $category_id === null) $category_id = null;
+
         $sql = "UPDATE products 
-                SET name = :name, price = :price, sale_price = :sale_price, description = :description, category_id = :category_id, status = :status, image = :image
+                SET name = :name, price = :price, sale_price = :sale_price, description = :description,
+                    category_id = :category_id, status = :status, image = :image
                 WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':image', $image);
-    } else {
-        $sql = "UPDATE products 
-                SET name = :name, price = :price, sale_price = :sale_price, description = :description, category_id = :category_id, status = :status
-                WHERE id = :id";
-        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':price', $price);
+        $stmt->bindParam(':sale_price', $sale_price);
+        $stmt->bindParam(':description', $description);
+        $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt->bindParam(':status', $status);
+        $stmt->bindParam(':image', $imagePath);
+        return $stmt->execute();
     }
 
-    $stmt->bindParam(':id', $id);
-    $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':price', $price);
-    $stmt->bindParam(':sale_price', $sale_price);
-    $stmt->bindParam(':description', $description);
-    $stmt->bindParam(':category_id', $category_id);
-    $stmt->bindParam(':status', $status);
-    return $stmt->execute();
-}
-    
     // Xóa sản phẩm
     public function deleteProduct($id)
     {
-        // Lấy thông tin sản phẩm để xóa hình ảnh nếu có
         $product = $this->getProductById($id);
-        
-        // Xóa sản phẩm trong database
+
         $sql = "DELETE FROM products WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindValue(':id', (int)$id, PDO::PARAM_INT);
         $result = $stmt->execute();
-        
-        // Nếu xóa thành công và có hình ảnh thì xóa file hình ảnh
-        if ($result && $product['image']) {
-            deleteFile($product['image']);
+
+        if ($result && $product['image'] && file_exists($product['image'])) {
+            unlink($product['image']);
         }
-        
+
         return $result;
     }
-    
+
     // Tìm kiếm sản phẩm
     public function searchProducts($keyword, $limit = null, $offset = 0)
     {
@@ -159,25 +154,23 @@ class ProductModel
                 LEFT JOIN categories c ON p.category_id = c.id 
                 WHERE p.name LIKE :keyword 
                 ORDER BY p.id DESC";
-        
+
         if ($limit !== null) {
             $sql .= " LIMIT :offset, :limit";
         }
-        
+
         $stmt = $this->conn->prepare($sql);
-        $searchKeyword = "%$keyword%";
-        $stmt->bindParam(':keyword', $searchKeyword);
-        
+        $stmt->bindValue(':keyword', "%$keyword%");
         if ($limit !== null) {
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         }
-        
+
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    // Lấy sản phẩm mới (không dùng trường status)
+
+    // Lấy sản phẩm mới
     public function getNewProducts($limit = 6)
     {
         $sql = "SELECT p.*, c.name as category_name 
@@ -185,28 +178,26 @@ class ProductModel
                 LEFT JOIN categories c ON p.category_id = c.id 
                 ORDER BY p.id DESC 
                 LIMIT :limit";
-        
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    // Lấy sản phẩm mà user đã comment (bỏ điều kiện status)
+
+    // Lấy sản phẩm mà user đã comment
     public function getProductsByUserComments($user_id, $limit = 6)
     {
-        $sql = "SELECT DISTINCT p.*, c.name as category_name 
-                FROM products p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                INNER JOIN comments cm ON p.id = cm.product_id 
-                WHERE cm.user_id = :user_id 
-                ORDER BY cm.created_at DESC 
+        $sql = "SELECT DISTINCT p.*, c.name AS category_name, cm.id AS comment_id
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                INNER JOIN comments cm ON p.id = cm.product_id
+                WHERE cm.user_id = :user_id
+                ORDER BY comment_id DESC
                 LIMIT :limit";
-        
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', (int)$user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
