@@ -80,10 +80,13 @@ match ($act) {
     'comment-add'=>(new CommentController())->add(),
     // Quản lý người dùng
     'admin-users'=> (new UserController())->index(),
+    'search-product'  => (new ProductController())->searchProduct(),
     'admin-user-create'=> (new UserController())->create(),
     'admin-user-store'=> (new UserController())->store(),
     'admin-user-edit'=> (new UserController())->edit(),
     'admin-user-update'=> (new UserController())->update(),
+
+    
     // ===== USER ROUTES =====
     'user-dashboard'=> (new UserController())->dashboard(),
     'user-profile'=> (new UserController())->profile(),

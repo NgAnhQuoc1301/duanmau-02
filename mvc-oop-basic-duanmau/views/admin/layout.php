@@ -145,8 +145,9 @@
                                     <span class="nav-link fw-bold"><?php echo $title ?? 'Dashboard'; ?></span>
                                 </li>
                             </ul>
-                            <form class="d-flex">
-                                <input class="form-control me-2" type="search" placeholder="Tìm kiếm..." aria-label="Search">
+                            <form class="d-flex" action="index.php" method="get">
+                                <input class="form-control me-2" name="keyword" type="search" placeholder="Tìm kiếm sản phẩm..." aria-label="Search" value="<?php echo $_GET['keyword'] ?? ''; ?>">
+                                <input type="hidden" name="act" value="search-product"> <!-- trỏ đến phương thức mới -->
                                 <button class="btn btn-outline-primary" type="submit">Tìm</button>
                             </form>
                         </div>

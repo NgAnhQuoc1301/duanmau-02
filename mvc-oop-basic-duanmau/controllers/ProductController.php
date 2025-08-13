@@ -224,4 +224,20 @@ class ProductController
         header('Location: index.php?act=admin-products');
         exit;
     }
+    // tìm kiếm sản phẩm
+    public function searchProduct() {
+    $keyword = $_GET['keyword'] ?? '';
+
+    if (!empty($keyword)) {
+        $products = $this->modelProduct->searchProducts($keyword);
+    } else {
+        $products = $this->modelProduct->getAllProducts();
+    }
+
+    $title = 'Quản lý sản phẩm';
+    $view = './views/admin/product/index.php'; 
+    require_once './views/admin/layout.php';
 }
+
+}
+

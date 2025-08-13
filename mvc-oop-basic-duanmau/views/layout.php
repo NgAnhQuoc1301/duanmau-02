@@ -110,8 +110,8 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <?php if ($_SESSION['user_role'] === 'admin'): ?>
-                                    <li><a class="dropdown-item" href="index.php?act=admin-products">Quản lý sản phẩm</a></li>
                                     <li><a class="dropdown-item" href="index.php?act=admin-categories">Quản lý danh mục</a></li>
+                                    <li><a class="dropdown-item" href="index.php?act=admin-products">Quản lý sản phẩm</a></li>
                                     <li><a class="dropdown-item" href="index.php?act=admin-comments">Quản lý bình luận</a></li>
                                     <li><a class="dropdown-item" href="index.php?act=admin-users">Quản lý người dùng</a></li>
                                 <?php endif; ?>
