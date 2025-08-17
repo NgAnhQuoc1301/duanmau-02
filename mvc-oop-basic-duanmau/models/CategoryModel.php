@@ -11,7 +11,7 @@ class CategoryModel
         }
     }
 
-    // Lấy tất cả danh mục với phân trang và tìm kiếm
+    // --- Code cũ giữ nguyên ---
     public function getAllCategories($keyword = '', $page = 1, $limit = 10)
     {
         $offset = ($page - 1) * $limit;
@@ -39,7 +39,6 @@ class CategoryModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Lấy danh mục theo ID
     public function getCategoryById($id)
     {
         $sql = "SELECT id, name FROM categories WHERE id = :id";
@@ -49,7 +48,6 @@ class CategoryModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Đếm tổng số danh mục (cho phân trang)
     public function countCategories($keyword = '')
     {
         $sql = "SELECT COUNT(*) FROM categories WHERE 1=1";
@@ -66,7 +64,6 @@ class CategoryModel
         return $stmt->fetchColumn();
     }
 
-    // Thêm danh mục mới
     public function addCategory($name)
     {
         $sql = "INSERT INTO categories (name) VALUES (:name)";
@@ -75,7 +72,6 @@ class CategoryModel
         return $stmt->execute();
     }
 
-    // Cập nhật danh mục
     public function updateCategory($id, $name)
     {
         $sql = "UPDATE categories SET name = :name WHERE id = :id";
@@ -85,12 +81,29 @@ class CategoryModel
         return $stmt->execute();
     }
 
-    // Xóa danh mục
     public function deleteCategory($id)
     {
         $sql = "DELETE FROM categories WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
+    }
+
+    // --- Phần thêm mới: lấy sản phẩm theo danh mục + sắp xếp ---
+    public function getProductsByCategory($categoryId, $sort = 'newest')
+    {
+        $orderBy = match($sort) {
+            'price-asc'  => 'price ASC',
+            'price-desc' => 'price DESC',
+            'name-asc'   => 'name ASC',
+            'name-desc'  => 'name DESC',
+            default      => 'created_at DESC', // newest
+        };
+
+        $sql = "SELECT * FROM products WHERE category_id = :categoryId ORDER BY $orderBy";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

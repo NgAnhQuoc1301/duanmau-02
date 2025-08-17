@@ -1,15 +1,55 @@
 <?php
-// Class chứa các function thực thi xử lý logic cho danh mục
 class CategoryController
 {
     public $modelCategory;
+    public $modelProduct; // thêm model Product để lấy sản phẩm theo category
 
     public function __construct()
     {
         $this->modelCategory = new CategoryModel();
+        $this->modelProduct = new ProductModel();
     }
 
-    // Hiển thị danh sách danh mục với tìm kiếm và phân trang
+    // Trang danh mục sản phẩm (frontend)
+    public function view()
+    {
+        $id = $_GET['id'] ?? 0;
+        $category = $this->modelCategory->getCategoryById($id);
+
+        if (!$category) {
+            $_SESSION['errors'] = ["Danh mục không tồn tại"];
+            header('Location: index.php?act=products');
+            exit;
+        }
+
+        // Xử lý phân trang
+        $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+        $limit = 9;
+
+        // Xử lý sắp xếp
+        $sort = $_GET['sort'] ?? 'newest';
+        switch($sort) {
+            case 'price-asc': $orderBy = 'price ASC'; break;
+            case 'price-desc': $orderBy = 'price DESC'; break;
+            case 'name-asc': $orderBy = 'name ASC'; break;
+            case 'name-desc': $orderBy = 'name DESC'; break;
+            case 'newest':
+            default: $orderBy = 'created_at DESC'; break;
+        }
+
+        // Lấy sản phẩm theo category + sắp xếp
+        $products = $this->modelProduct->getProductsByCategory($id, $orderBy);
+
+        // Tổng số sản phẩm và phân trang
+        $totalProducts = count($products);
+        $totalPages = ceil($totalProducts / $limit);
+        $products = array_slice($products, ($page - 1) * $limit, $limit);
+
+        $view = './views/frontend/category/view.php';
+        require_once './views/frontend/layout.php';
+    }
+
+    // Các hàm admin giữ nguyên (index, create, store, edit, update, delete)
     public function index()
     {
         $title = "Quản lý danh mục";
@@ -26,7 +66,6 @@ class CategoryController
         require_once './views/admin/layout.php';
     }
 
-    // Hiển thị form thêm danh mục
     public function create()
     {
         $title = "Thêm danh mục mới";
@@ -34,7 +73,6 @@ class CategoryController
         require_once './views/admin/layout.php';
     }
 
-    // Xử lý thêm danh mục
     public function store()
     {
         $name = trim($_POST['name'] ?? '');
@@ -63,7 +101,6 @@ class CategoryController
         exit;
     }
 
-    // Hiển thị form chỉnh sửa danh mục
     public function edit()
     {
         $id = $_GET['id'] ?? 0;
@@ -80,7 +117,6 @@ class CategoryController
         require_once './views/admin/layout.php';
     }
 
-    // Xử lý cập nhật danh mục
     public function update()
     {
         $id = $_POST['id'] ?? 0;
@@ -118,7 +154,6 @@ class CategoryController
         exit;
     }
 
-    // Xử lý xóa danh mục
     public function delete()
     {
         $id = $_GET['id'] ?? 0;
