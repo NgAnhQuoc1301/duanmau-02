@@ -26,18 +26,29 @@ class ProductController
     }
 
     public function Products()
-    {
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $limit = 12;
-        $offset = ($page - 1) * $limit;
-        $totalProducts = $this->modelProduct->countProducts();
-        $totalPages = ceil($totalProducts / $limit);
-        $products = $this->modelProduct->getAllProducts($limit, $offset);
-        $categories = $this->modelCategory->getAllCategories();
-        $title = "Shop Online - Tất cả sản phẩm";
-        $view = './views/products.php';
-        require_once './views/layout.php';
-    }
+{
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $limit = 12;
+    $offset = ($page - 1) * $limit;
+
+    // Lấy giá trị filter từ GET
+    $selectedCategories = isset($_GET['category']) ? $_GET['category'] : [];
+    $selectedPrice = isset($_GET['priceRange']) ? $_GET['priceRange'] : null;
+    $selectedRating = isset($_GET['rating']) ? $_GET['rating'] : null;
+
+    // Lấy tổng số sản phẩm (có filter)
+    $productsFiltered = $this->modelProduct->getFilteredProducts($selectedCategories, $selectedPrice, $selectedRating, 100000, 0); 
+    $totalProducts = count($productsFiltered);
+    $totalPages = ceil($totalProducts / $limit);
+
+    // Lấy sản phẩm hiển thị trang hiện tại
+    $products = $this->modelProduct->getFilteredProducts($selectedCategories, $selectedPrice, $selectedRating, $limit, $offset);
+
+    $categories = $this->modelCategory->getAllCategories();
+    $title = "Shop Online - Tất cả sản phẩm";
+    $view = './views/products.php';
+    require_once './views/layout.php';
+}
 
     public function ProductDetail()
     {

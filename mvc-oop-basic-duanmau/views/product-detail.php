@@ -277,3 +277,113 @@ function incrementQuantity() {
     qtyInput.value = current + 1;
 }
 </script>
+<style>/* ==== WHITE & BLACK THEME ==== */
+body {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Tiêu đề */
+h2, h3, h4, h5 {
+    color: #000;
+}
+
+/* Nút chính */
+.btn-primary {
+    background-color: #000;
+    border: 1px solid #000;
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Nút danger (mua ngay) */
+.btn-danger {
+    background-color: #333;
+    border: 1px solid #333;
+    color: #fff;
+}
+.btn-danger:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Nút outline */
+.btn-outline-secondary,
+.btn-outline-primary {
+    border: 1px solid #000;
+    color: #000;
+    background: transparent;
+}
+.btn-outline-secondary:hover,
+.btn-outline-primary:hover {
+    background: #000;
+    color: #fff;
+}
+
+/* Input */
+.form-control, .form-select {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #000;
+    box-shadow: none;
+}
+
+/* Card sản phẩm */
+.product-card, .card {
+    border: 1px solid #000;
+    background: #fff;
+    color: #000;
+}
+.product-card .card-title {
+    color: #000;
+}
+
+/* Bình luận */
+.comment-item {
+    border: 1px solid #000 !important;
+    background: #fff;
+    color: #000;
+}
+
+/* Icon ngôi sao giữ màu vàng */
+.fa-star, .fa-star-half-alt {
+    color: #ffcc00 !important;
+}
+
+/* Link */
+a {
+    color: #000;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* Nút link (xem thêm bình luận) */
+.btn-link {
+    color: #000;
+}
+.btn-link:hover {
+    text-decoration: underline;
+    color: #333;
+}
+
+/* ==== FOOTER ==== */
+footer {
+    background: #000;
+    color: #fff;
+}
+footer a {
+    color: #fff;
+}
+footer a:hover {
+    color: #ddd;
+}
+
+</style>

@@ -148,6 +148,18 @@ public function dashboard() {
     $view = './views/user/dashboard.php';
     require_once './views/layout.php';
 }
+public function profile() {
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?url=user-profile");
+            exit;
+        }
 
+        // Lấy thông tin user từ session
+        $user = $_SESSION['user'];
+
+        // Gọi view hiển thị
+        include_once "views/user/profile.php";
+    }
 }
 ?>

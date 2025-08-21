@@ -142,3 +142,95 @@
         <?php endif; ?>
     </div>
 </div>
+<style>
+    /* Tổng thể */
+body {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: transparent;
+}
+.breadcrumb-item a {
+    color: #000;
+    text-decoration: none;
+}
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+.breadcrumb-item.active {
+    color: #666;
+}
+
+/* Banner danh mục */
+.bg-primary {
+    background-color: #000 !important;
+}
+.text-white {
+    color: #fff !important;
+}
+
+/* Sidebar lọc sản phẩm */
+.card-header.bg-primary {
+    background-color: #000 !important;
+}
+.btn-primary {
+    background-color: #000 !important;
+    border: none;
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #333 !important;
+}
+
+/* Sản phẩm */
+.product-card {
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Giá sản phẩm */
+.text-danger {
+    color: #000 !important;
+}
+.text-decoration-line-through {
+    color: #888 !important;
+}
+
+/* Badge khuyến mãi */
+.badge.bg-danger {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+/* Nút giỏ hàng */
+.card-footer .btn {
+    background-color: #000 !important;
+    border: none;
+    color: #fff;
+}
+.card-footer .btn:disabled {
+    background-color: #999 !important;
+}
+
+/* Phân trang */
+.page-link {
+    color: #000 !important;
+    border: 1px solid #ccc;
+}
+.page-item.active .page-link {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-color: #000 !important;
+}
+.page-link:hover {
+    background-color: #eee;
+}
+
+</style>

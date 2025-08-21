@@ -11,20 +11,29 @@
 
 <div class="row">
     <!-- Sidebar lọc sản phẩm -->
-    <div class="col-lg-3 mb-4">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Lọc sản phẩm</h5>
-            </div>
-            <div class="card-body">
+<div class="col-lg-3 mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Lọc sản phẩm</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="index.php">
+                <input type="hidden" name="act" value="products">
+                
                 <!-- Lọc theo danh mục -->
                 <div class="mb-4">
                     <h6 class="fw-bold mb-3">Danh mục</h6>
                     <?php if (!empty($categories)): ?>
                         <?php foreach ($categories as $category): ?>
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="category<?php echo $category['id']; ?>" name="category[]" value="<?php echo $category['id']; ?>" <?php echo (isset($_GET['category']) && in_array($category['id'], $_GET['category'])) ? 'checked' : ''; ?>>
-                                <label class="form-check-label" for="category<?php echo $category['id']; ?>"><?php echo $category['name']; ?></label>
+                                <input class="form-check-input" type="checkbox" 
+                                    id="category<?php echo $category['id']; ?>" 
+                                    name="category[]" 
+                                    value="<?php echo $category['id']; ?>"
+                                    <?php echo (isset($_GET['category']) && in_array($category['id'], $_GET['category'])) ? 'checked' : ''; ?>>
+                                <label class="form-check-label" for="category<?php echo $category['id']; ?>">
+                                    <?php echo $category['name']; ?>
+                                </label>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
@@ -35,69 +44,50 @@
                 <!-- Lọc theo giá -->
                 <div class="mb-4">
                     <h6 class="fw-bold mb-3">Giá</h6>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="priceRange" id="price1">
-                        <label class="form-check-label" for="price1">Dưới 1 triệu</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="priceRange" id="price2">
-                        <label class="form-check-label" for="price2">1 - 3 triệu</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="priceRange" id="price3">
-                        <label class="form-check-label" for="price3">3 - 5 triệu</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="priceRange" id="price4">
-                        <label class="form-check-label" for="price4">5 - 10 triệu</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="priceRange" id="price5">
-                        <label class="form-check-label" for="price5">Trên 10 triệu</label>
-                    </div>
+                    <?php 
+                    $prices = [
+                        "1" => "Dưới 1 triệu",
+                        "2" => "1 - 3 triệu",
+                        "3" => "3 - 5 triệu",
+                        "4" => "5 - 10 triệu",
+                        "5" => "Trên 10 triệu"
+                    ];
+                    foreach ($prices as $key => $label): ?>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="priceRange" id="price<?php echo $key; ?>" value="<?php echo $key; ?>"
+                            <?php echo (isset($_GET['priceRange']) && $_GET['priceRange'] == $key) ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="price<?php echo $key; ?>"><?php echo $label; ?></label>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
                 
                 <!-- Lọc theo đánh giá -->
                 <div class="mb-4">
                     <h6 class="fw-bold mb-3">Đánh giá</h6>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="rating" id="rating5">
-                        <label class="form-check-label" for="rating5">
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="rating" id="rating4">
-                        <label class="form-check-label" for="rating4">
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="far fa-star text-warning"></i>
-                            trở lên
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="rating" id="rating3">
-                        <label class="form-check-label" for="rating3">
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="fas fa-star text-warning"></i>
-                            <i class="far fa-star text-warning"></i>
-                            <i class="far fa-star text-warning"></i>
-                            trở lên
-                        </label>
-                    </div>
+                    <?php for ($i = 5; $i >= 3; $i--): ?>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="rating" id="rating<?php echo $i; ?>" value="<?php echo $i; ?>"
+                            <?php echo (isset($_GET['rating']) && $_GET['rating'] == $i) ? 'checked' : ''; ?>>
+                            <label class="form-check-label" for="rating<?php echo $i; ?>">
+                                <?php for ($j = 1; $j <= 5; $j++): ?>
+                                    <?php if ($j <= $i): ?>
+                                        <i class="fas fa-star text-warning"></i>
+                                    <?php else: ?>
+                                        <i class="far fa-star text-warning"></i>
+                                    <?php endif; ?>
+                                <?php endfor; ?>
+                                <?php if ($i < 5): ?> trở lên <?php endif; ?>
+                            </label>
+                        </div>
+                    <?php endfor; ?>
                 </div>
                 
-                <button class="btn btn-primary w-100">Áp dụng</button>
-            </div>
+                <button type="submit" class="btn btn-primary w-100">Áp dụng</button>
+            </form>
         </div>
     </div>
+</div>
+
     
     <!-- Danh sách sản phẩm -->
     <div class="col-lg-9">
@@ -189,3 +179,130 @@
         <?php endif; ?>
     </div>
 </div>
+<style>
+    /* ==== Giao diện danh sách sản phẩm ==== */
+
+/* Breadcrumb */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+.breadcrumb-item a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+}
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+.breadcrumb-item.active {
+    color: #666;
+}
+
+/* Sidebar lọc sản phẩm */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+.card-header {
+    background: #000 !important;
+    color: #fff !important;
+    border-radius: 10px 10px 0 0 !important;
+}
+.card-body h6 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #000;
+}
+.form-check-input:checked {
+    background-color: #000;
+    border-color: #000;
+}
+.btn-primary {
+    background-color: #000 !important;
+    border: none !important;
+    color: #fff !important;
+    border-radius: 6px;
+}
+.btn-primary:hover {
+    background-color: #333 !important;
+}
+
+/* Danh sách sản phẩm */
+.product-card {
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+.product-card .card-body {
+    padding: 15px;
+}
+.product-card h5 {
+    font-size: 16px;
+    font-weight: 600;
+}
+.product-card p {
+    font-size: 14px;
+    color: #555;
+}
+.text-danger {
+    color: #000 !important; /* giá chính */
+}
+.text-decoration-line-through {
+    color: #888 !important; /* giá gạch bỏ */
+}
+
+/* Badge khuyến mãi */
+.badge.bg-danger {
+    background-color: #000 !important;
+    color: #fff !important;
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+/* Nút xem chi tiết */
+.btn-sm.btn-primary {
+    background-color: #000 !important;
+    border: none;
+    color: #fff;
+}
+.btn-sm.btn-primary:hover {
+    background-color: #333 !important;
+}
+
+/* Footer card */
+.card-footer {
+    background: #fff !important;
+    border: none !important;
+    padding: 10px;
+}
+.card-footer .btn {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-radius: 6px;
+}
+.card-footer .btn:hover {
+    background-color: #333 !important;
+}
+
+/* Phân trang */
+.pagination .page-link {
+    color: #000;
+    border: 1px solid #ccc;
+}
+.pagination .page-item.active .page-link {
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+}
+.pagination .page-link:hover {
+    background-color: #f1f1f1;
+}
+
+</style>

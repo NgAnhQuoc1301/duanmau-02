@@ -196,5 +196,57 @@ class ProductModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+    public function getFilteredProducts($categories = [], $priceRange = null, $rating = null, $limit = 12, $offset = 0) {
+    $sql = "SELECT * FROM products WHERE 1=1";
+    $params = [];
+
+    // Lọc theo danh mục
+    if (!empty($categories)) {
+        $placeholders = [];
+        foreach ($categories as $index => $catId) {
+            $key = ":cat$index";
+            $placeholders[] = $key;
+            $params[$key] = $catId;
+        }
+        $sql .= " AND category_id IN (" . implode(',', $placeholders) . ")";
+    }
+
+    // Lọc theo khoảng giá
+    if ($priceRange) {
+        switch ($priceRange) {
+            case "1": $params[':minPrice'] = 0; $params[':maxPrice'] = 1000000; break;
+            case "2": $params[':minPrice'] = 1000000; $params[':maxPrice'] = 3000000; break;
+            case "3": $params[':minPrice'] = 3000000; $params[':maxPrice'] = 5000000; break;
+            case "4": $params[':minPrice'] = 5000000; $params[':maxPrice'] = 10000000; break;
+            case "5": $params[':minPrice'] = 10000000; $params[':maxPrice'] = 1000000000; break;
+        }
+        $sql .= " AND price BETWEEN :minPrice AND :maxPrice";
+    }
+
+    // Lọc theo đánh giá
+    if ($rating) {
+        $sql .= " AND rating >= :rating";
+        $params[':rating'] = $rating;
+    }
+
+    // Sắp xếp mặc định theo id mới nhất
+    $sql .= " ORDER BY id DESC";
+
+    // Phân trang (dùng trực tiếp số)
+    $sql .= " LIMIT $limit OFFSET $offset";
+
+    $stmt = $this->conn->prepare($sql);
+    foreach ($params as $key => $value) {
+        if (is_int($value)) {
+            $stmt->bindValue($key, $value, PDO::PARAM_INT);
+        } else {
+            $stmt->bindValue($key, $value);
+        }
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 }

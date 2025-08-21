@@ -89,9 +89,9 @@ match ($act) {
     
     // ===== USER ROUTES =====
     'user-dashboard'=> (new UserController())->dashboard(),
-    // 'user-profile'=> (new UserController())->profile(),
-    // 'user-orders'=> (new UserController())->orders(),
-    // 'user-favorites'=> (new UserController())->favorites(),
+    'user-profile'=> (new UserController())->profile(),
+    'user-orders'=> (new UserController())->orders(),
+    'user-favorites'=> (new UserController())->favorites(),
     
     // Mặc định về trang chủ
     default => (new ProductController())->Home(),

@@ -76,7 +76,7 @@
     <!-- Header -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="index.php">Shop Online</a>
+            <a class="navbar-brand" href="index.php">UNI STU</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -93,9 +93,9 @@
                             Danh mục
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="index.php?act=category&id=1">Áo Thun</a></li>
+                            <li><a class="dropdown-item" href="index.php?act=category&id=1">T-Shirts</a></li>
                             <li><a class="dropdown-item" href="index.php?act=category&id=2">Sơ Mi</a></li>
-                            <li><a class="dropdown-item" href="index.php?act=category&id=3">Quần Jeans</a></li>
+                            <li><a class="dropdown-item" href="index.php?act=category&id=3">Pants</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -149,7 +149,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5>Shop Online</h5>
+                    <h5>UNI STU</h5>
                     <p>Cung cấp các sản phẩm chất lượng cao với giá cả hợp lý.</p>
                 </div>
                 <div class="col-md-4">
@@ -164,15 +164,15 @@
                 <div class="col-md-4">
                     <h5>Liên hệ</h5>
                     <address>
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận XYZ, TP. HCM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận XYZ, TP. HN</p>
                         <p><i class="fas fa-phone"></i> (84) 123-456-789</p>
-                        <p><i class="fas fa-envelope"></i> info@shoponline.com</p>
+                        <p><i class="fas fa-envelope"></i> info@unistu.com</p>
                     </address>
                 </div>
             </div>
             <hr class="bg-light">
             <div class="text-center">
-                <p>&copy; <?php echo date('Y'); ?> Shop Online. All Rights Reserved.</p>
+                <p>&copy; <?php echo date('Y'); ?> UNI STU. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

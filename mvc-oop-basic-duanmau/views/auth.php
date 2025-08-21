@@ -7,7 +7,7 @@
                     <div class="bg-primary h-100 d-flex align-items-center justify-content-center p-5">
                         <div class="text-center text-white">
                             <i class="fas fa-shopping-cart fa-5x mb-4"></i>
-                            <h2 class="fw-bold mb-4">Shop Online</h2>
+                            <h2 class="fw-bold mb-4">UNI STU</h2>
                             <p class="lead">Chào mừng bạn đến với cửa hàng trực tuyến của chúng tôi!</p>
                             <p>Đăng nhập để trải nghiệm mua sắm tốt nhất và nhận nhiều ưu đãi hấp dẫn.</p>
                         </div>
