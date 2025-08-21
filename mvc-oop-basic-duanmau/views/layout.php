@@ -118,8 +118,6 @@
                                 <hr>
                                 <li><a class="dropdown-item" href="index.php?act=user-dashboard">Dashboard</a></li>
                                 <li><a class="dropdown-item" href="index.php?act=user-profile">Hồ sơ</a></li>
-                                <li><a class="dropdown-item" href="index.php?act=user-orders">Đơn hàng</a></li>
-                                <li><a class="dropdown-item" href="index.php?act=user-favorites">Yêu thích</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="index.php?act=logout">Đăng xuất</a></li>
                             </ul>

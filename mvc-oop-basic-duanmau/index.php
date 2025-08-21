@@ -42,7 +42,7 @@ match ($act) {
     'product-detail'=>(new ProductController())->ProductDetail(),
     
     // Trang danh mục sản phẩm
-    'category'=>(new ProductController())->Category(),
+    'category'=>(new CategoryController())->Category(),
     
     // Trang đăng nhập/đăng ký
     'login'=>(new AuthController())->showLogin(),
@@ -90,9 +90,20 @@ match ($act) {
     // ===== USER ROUTES =====
     'user-dashboard'=> (new UserController())->dashboard(),
     'user-profile'=> (new UserController())->profile(),
-    'user-orders'=> (new UserController())->orders(),
-    'user-favorites'=> (new UserController())->favorites(),
+    // 'user-orders'=> (new UserController())->orders(),
+    // 'user-favorites'=> (new UserController())->favorites(),
+    
     
     // Mặc định về trang chủ
     default => (new ProductController())->Home(),
 };
+?>
+<?php
+    $act = $_GET['act'] ?? 'home';
+    switch ($act) {
+    case 'category':
+        $controller = new CategoryController();
+        $controller->category();
+        break;
+    }
+        ?>

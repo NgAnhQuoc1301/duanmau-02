@@ -1,12 +1,10 @@
 <?php
-// Khởi tạo các biến nếu chưa có để tránh cảnh báo
 $user_name = $user_name ?? '';
 $favorite_products = $favorite_products ?? [];
 $recent_comments = $recent_comments ?? [];
 $new_products = $new_products ?? [];
 ?>
 <div class="container mt-4">
-    <!-- Welcome Section -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="card bg-primary text-white">
@@ -22,7 +20,6 @@ $new_products = $new_products ?? [];
     </div>
 
     <div class="row">
-        <!-- Sản phẩm yêu thích -->
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <div class="card-header">
@@ -80,8 +77,6 @@ $new_products = $new_products ?? [];
                 </div>
             </div>
         </div>
-
-        <!-- Comment gần đây -->
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <div class="card-header">
@@ -123,8 +118,6 @@ $new_products = $new_products ?? [];
             </div>
         </div>
     </div>
-
-    <!-- Sản phẩm mới -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -144,7 +137,7 @@ $new_products = $new_products ?? [];
                                         <?php if (!empty($product['image'])): ?>
                                             <img src="<?php echo $product['image']; ?>" class="card-img-top" alt="<?php echo $product['name']; ?>" style="height: 120px; object-fit: cover;">
                                         <?php else: ?>
-                                            <img src="https://via.placeholder.com/200x120?text=No+Image" class="card-img-top" alt="No Image">
+                                            <img src="/uploads/image/1-5.png" class="card-img-top" alt="No Image">
                                         <?php endif; ?>
                                         <?php if ($product['sale_price'] > 0 && $product['sale_price'] < $product['price']): ?>
                                             <div class="position-absolute top-0 end-0 p-1">
@@ -177,4 +170,65 @@ $new_products = $new_products ?? [];
             </div>
         </div>
     </div>
+    <style>
+   /* Toàn bộ nền */
+body {
+    background-color: #ffffff; /* Nền trắng */
+    color: #000; /* chữ mặc định đen */
+}
+
+/* Card trong dashboard */
+.card {
+    background-color: #1a1a1a !important; /* Đen mềm */
+    color: #ffffff !important; /* Chữ trắng */
+    border-radius: 12px; /* Bo góc mềm */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35); /* Bóng nổi */
+    padding: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Nhấc card lên khi hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+}
+
+/* Chữ trong card */
+.card p, 
+.card h5, 
+.card h6, 
+.card span {
+    color: #f5f5f5 !important; /* Trắng sáng */
+}
+
+/* Icon trong card */
+.card i {
+    font-size: 32px; /* Icon to hơn */
+    color: #ffcc00; /* Màu vàng nổi bật */
+    margin-bottom: 10px;
+    display: inline-block;
+    filter: drop-shadow(0px 0px 5px rgba(255, 204, 0, 0.8)); /* Icon phát sáng */
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.card i:hover {
+    transform: scale(1.2); /* Phóng to icon khi hover */
+    filter: drop-shadow(0px 0px 8px rgba(255, 204, 0, 1));
+}
+
+/* Nút trong card */
+.card .btn {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.card .btn:hover {
+    background-color: #000000;
+    color: #ffffff;
+    border: 1px solid #fff;
+}
+
+    </style>
 </div> 

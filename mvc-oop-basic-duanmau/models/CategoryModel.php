@@ -87,19 +87,34 @@ class CategoryModel
         return $stmt->execute();
     }
     public function getProductsByCategory($categoryId, $sort = 'newest')
-    {
-        $orderBy = match($sort) {
-            'price-asc'  => 'price ASC',
-            'price-desc' => 'price DESC',
-            'name-asc'   => 'name ASC',
-            'name-desc'  => 'name DESC',
-            default      => 'created_at DESC', 
-        };
-
-        $sql = "SELECT * FROM products WHERE category_id = :categoryId ORDER BY $orderBy";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+{
+    switch ($sort) {
+        case 'price-asc':
+            $orderBy = "price ASC";
+            break;
+        case 'price-desc':
+            $orderBy = "price DESC";
+            break;
+        case 'name-asc':
+            $orderBy = "name ASC";
+            break;
+        case 'name-desc':
+            $orderBy = "name DESC";
+            break;
+        case 'newest':
+        default:
+            $orderBy = "id DESC";
+            break;
     }
+
+    $sql = "SELECT * FROM products 
+            WHERE category_id = :categoryId 
+            ORDER BY $orderBy";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':categoryId', $categoryId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

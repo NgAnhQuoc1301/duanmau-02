@@ -48,29 +48,51 @@ class ProductModel
     }
 
     // Lấy sản phẩm theo danh mục
-    public function getProductsByCategory($category_id, $limit = null, $offset = 0)
-    {
-        $sql = "SELECT p.*, c.name as category_name 
-                FROM products p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                WHERE p.category_id = :category_id 
-                ORDER BY p.id DESC";
+    public function getProductsByCategory($category_id, $sort = 'newest', $limit = null, $offset = 0)
+{
+    // Xử lý sắp xếp
+    $orderBy = "ORDER BY p.id DESC"; // mặc định: mới nhất
 
-        if ($limit !== null) {
-            $sql .= " LIMIT :offset, :limit";
-        }
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':category_id', (int)$category_id, PDO::PARAM_INT);
-
-        if ($limit !== null) {
-            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        }
-
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    switch ($sort) {
+        case 'price-asc':
+            $orderBy = "ORDER BY p.price ASC";
+            break;
+        case 'price-desc':
+            $orderBy = "ORDER BY p.price DESC";
+            break;
+        case 'name-asc':
+            $orderBy = "ORDER BY p.name ASC";
+            break;
+        case 'name-desc':
+            $orderBy = "ORDER BY p.name DESC";
+            break;
+        case 'newest':
+        default:
+            $orderBy = "ORDER BY p.id DESC";
+            break;
     }
+
+    $sql = "SELECT p.*, c.name as category_name 
+            FROM products p 
+            LEFT JOIN categories c ON p.category_id = c.id 
+            WHERE p.category_id = :category_id 
+            $orderBy";
+
+    if ($limit !== null) {
+        $sql .= " LIMIT :offset, :limit";
+    }
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':category_id', (int)$category_id, PDO::PARAM_INT);
+
+    if ($limit !== null) {
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     // Đếm tổng số sản phẩm
     public function countProducts($category_id = null)
@@ -167,18 +189,13 @@ class ProductModel
     }
 
     // Lấy sản phẩm mới
-    public function getNewProducts($limit = 6)
-    {
-        $sql = "SELECT p.*, c.name as category_name 
-                FROM products p 
-                LEFT JOIN categories c ON p.category_id = c.id 
-                ORDER BY p.id DESC 
-                LIMIT :limit";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    public function getNewProducts($limit = 6) {
+    $sql = "SELECT * FROM products ORDER BY created_at DESC LIMIT :limit";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     // Lấy sản phẩm mà user đã comment
     public function getProductsByUserComments($user_id, $limit = 6)

@@ -175,4 +175,18 @@ class CategoryController
         header('Location: index.php?act=admin-categories');
         exit;
     }
+     public function category() {
+        $categoryId = $_GET['id'] ?? null;
+        $page = $_GET['page'] ?? 1;
+        $limit = 12;
+        $offset = ($page - 1) * $limit;
+
+        $sort = $_GET['sort'] ?? 'newest';
+
+        $productModel = new ProductModel();
+        $products = $productModel->getProductsByCategory($categoryId, $sort, $limit, $offset);
+
+        include "views/category.php";
+    }
+
 }

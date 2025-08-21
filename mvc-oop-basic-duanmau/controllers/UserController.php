@@ -149,17 +149,26 @@ public function dashboard() {
     require_once './views/layout.php';
 }
 public function profile() {
-        // Kiểm tra đăng nhập
-        if (!isset($_SESSION['user'])) {
-            header("Location: index.php?url=user-profile");
+        // Giả sử lấy user từ session
+        $user = $_SESSION['user'] ?? null;
+
+        if (!$user) {
+            header("Location: index.php?url=login");
             exit;
         }
 
-        // Lấy thông tin user từ session
-        $user = $_SESSION['user'];
+        include "views/profile.php";
+    }
 
-        // Gọi view hiển thị
-        include_once "views/user/profile.php";
+    public function editProfile() {
+        $user = $_SESSION['user'] ?? null;
+
+        if (!$user) {
+            header("Location: index.php?url=login");
+            exit;
+        }
+
+        include "views/edit-profile.php";
     }
 }
 ?>
