@@ -10,8 +10,6 @@ class CategoryModel
             throw new Exception("Không thể kết nối database");
         }
     }
-
-    // --- Code cũ giữ nguyên ---
     public function getAllCategories($keyword = '', $page = 1, $limit = 10)
     {
         $offset = ($page - 1) * $limit;
@@ -88,8 +86,6 @@ class CategoryModel
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-
-    // --- Phần thêm mới: lấy sản phẩm theo danh mục + sắp xếp ---
     public function getProductsByCategory($categoryId, $sort = 'newest')
     {
         $orderBy = match($sort) {
@@ -97,7 +93,7 @@ class CategoryModel
             'price-desc' => 'price DESC',
             'name-asc'   => 'name ASC',
             'name-desc'  => 'name DESC',
-            default      => 'created_at DESC', // newest
+            default      => 'created_at DESC', 
         };
 
         $sql = "SELECT * FROM products WHERE category_id = :categoryId ORDER BY $orderBy";
