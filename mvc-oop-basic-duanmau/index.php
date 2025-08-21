@@ -98,12 +98,3 @@ match ($act) {
     default => (new ProductController())->Home(),
 };
 ?>
-<?php
-    $act = $_GET['act'] ?? 'home';
-    switch ($act) {
-    case 'category':
-        $controller = new CategoryController();
-        $controller->category();
-        break;
-    }
-        ?>
