@@ -240,11 +240,11 @@ class ProductModel
         $sql .= " AND price BETWEEN :minPrice AND :maxPrice";
     }
 
-    // Lọc theo đánh giá
-    if ($rating) {
-        $sql .= " AND rating >= :rating";
-        $params[':rating'] = $rating;
-    }
+    // // Lọc theo đánh giá
+    // if ($rating) {
+    //     $sql .= " AND rating >= :rating";
+    //     $params[':rating'] = $rating;
+    // }
 
     // Sắp xếp mặc định theo id mới nhất
     $sql .= " ORDER BY id DESC";

@@ -34,23 +34,17 @@ class AuthController
             }
 
             if (empty($errors)) {
-                // Thử đăng nhập
                 $user = $this->modelUser->login($email, $password);
                 
                 if ($user) {
-                    // Đăng nhập thành công
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_name'] = $user['username'];
                     $_SESSION['user_email'] = $user['email'];
                     $_SESSION['user_role'] = $user['role'];
                     $_SESSION['success'] = "Đăng nhập thành công!";
-                    
-                    // Redirect dựa trên role
                     if ($user['role'] === 'admin') {
-                        // Admin -> chuyển đến trang quản lý sản phẩm
                         header('Location: index.php?act=admin-products');
                     } else {
-                        // User -> chuyển đến dashboard
                         header('Location: index.php?act=user-dashboard');
                     }
                     exit;
