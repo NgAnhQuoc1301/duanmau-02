@@ -88,16 +88,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="index.php?act=products">Sản phẩm</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            Danh mục
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="index.php?act=category&id=1">T-Shirts</a></li>
-                            <li><a class="dropdown-item" href="index.php?act=category&id=2">Sơ Mi</a></li>
-                            <li><a class="dropdown-item" href="index.php?act=category&id=3">Pants</a></li>
-                        </ul>
-                    </li>
                 </ul>
                 <div class="d-flex">
                     <a href="index.php?act=cart" class="btn btn-outline-light me-2">

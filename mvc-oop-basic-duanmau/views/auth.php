@@ -70,7 +70,7 @@
                             <!-- Đăng ký -->
                             <div class="tab-pane fade" id="register" role="tabpanel">
                                 <h3 class="mb-4">Đăng ký tài khoản</h3>
-                                <form action="index.php?act=register" method="post">
+                                <form action="index.php?act=auth-register" method="post">
                                     <div class="mb-3">
                                         <label for="registerName" class="form-label">Họ và tên</label>
                                         <div class="input-group">
@@ -83,13 +83,6 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                             <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Nhập email" required>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="registerPhone" class="form-label">Số điện thoại</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                            <input type="tel" class="form-control" id="registerPhone" name="phone" placeholder="Nhập số điện thoại" required>
                                         </div>
                                     </div>
                                     <div class="mb-3">

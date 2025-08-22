@@ -1,5 +1,4 @@
 <?php
-// Class chứa các function thực thi xử lý logic cho authentication
 class AuthController
 {
     public $modelUser;
@@ -9,7 +8,6 @@ class AuthController
         $this->modelUser = new UserModel();
     }
 
-    // Hiển thị form đăng nhập
     public function showLogin()
     {
         $title = "Shop Online - Đăng nhập";
@@ -17,14 +15,12 @@ class AuthController
         require_once './views/layout.php';
     }
 
-    // Xử lý đăng nhập
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            // Validation
             $errors = [];
             if (empty($email)) {
                 $errors[] = "Email không được để trống";
@@ -61,91 +57,77 @@ class AuthController
             }
         }
 
-        // Nếu không phải POST request, redirect về form login
         header('Location: index.php?act=login');
         exit;
     }
 
-    // Hiển thị form đăng ký
     public function showRegister()
     {
         $title = "Shop Online - Đăng ký";
-        $view = './views/auth/register.php';
+        $view = './views/register.php'; // Đảm bảo đúng đường dẫn
         require_once './views/layout.php';
     }
+        public function register() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $confirm_password = $_POST['confirm_password'] ?? '';
 
-    // Xử lý đăng ký
-    public function register()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = trim($_POST['username'] ?? '');
-            $email = trim($_POST['email'] ?? '');
-            $password = $_POST['password'] ?? '';
-            $confirm_password = $_POST['confirm_password'] ?? '';
+        // Xác thực dữ liệu
+        $errors = [];
+        if (empty($name)) $errors[] = "Họ và tên không được để trống";
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Email không hợp lệ";
+        if (empty($password)) $errors[] = "Mật khẩu không được để trống";
+        if ($password !== $confirm_password) $errors[] = "Mật khẩu và xác nhận mật khẩu không khớp";
+        if (strlen($password) < 6) $errors[] = "Mật khẩu phải có ít nhất 6 ký tự";
 
-            // Validation
-            $errors = [];
-            if (empty($username)) {
-                $errors[] = "Tên đăng nhập không được để trống";
-            }
-            if (empty($email)) {
-                $errors[] = "Email không được để trống";
-            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $errors[] = "Email không hợp lệ";
-            }
-            if (empty($password)) {
-                $errors[] = "Mật khẩu không được để trống";
-            } elseif (strlen($password) < 6) {
-                $errors[] = "Mật khẩu phải có ít nhất 6 ký tự";
-            }
-            if ($password !== $confirm_password) {
-                $errors[] = "Mật khẩu xác nhận không khớp";
-            }
+        if (empty($errors)) {
+            // Mã hóa mật khẩu
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Kiểm tra email đã tồn tại chưa
-            if (empty($errors)) {
-                $existingUser = $this->modelUser->getUserByEmail($email);
-                if ($existingUser) {
-                    $errors[] = "Email đã được sử dụng";
-                }
-            }
+            // Lưu vào database
+            require_once './models/UserModel.php';
+            $userModel = new UserModel();
+            $data = [
+                'name' => $name,
+                'email' => $email,
+                'password' => $hashed_password,
+                'role' => 'user' // Giá trị mặc định cho role
+            ];
+            $result = $userModel->addUser($data);
 
-            if (empty($errors)) {
-                // Thêm user mới
-                $result = $this->modelUser->addUser($username, $email, $password);
-                
-                if ($result) {
-                    $_SESSION['success'] = "Đăng ký thành công! Vui lòng đăng nhập.";
-                    header('Location: index.php?act=login');
-                    exit;
-                } else {
-                    $errors[] = "Đăng ký thất bại";
-                }
-            }
-
-            if (!empty($errors)) {
-                $_SESSION['errors'] = $errors;
-                $_SESSION['old_data'] = $_POST;
-                header('Location: index.php?act=register');
+            if ($result) {
+                // Đăng ký thành công, lưu session và chuyển hướng
+                $_SESSION['user_id'] = $result;
+                $_SESSION['user_name'] = $name;
+                header('Location: index.php?act=user-dashboard');
                 exit;
+            } else {
+                $errors[] = "Đăng ký thất bại. Vui lòng thử lại.";
             }
         }
 
-        header('Location: index.php?act=register');
-        exit;
+        // Lưu dữ liệu cũ và lỗi để hiển thị lại form
+        if (!empty($errors)) {
+            $_SESSION['errors'] = $errors;
+            $_SESSION['old_data'] = $_POST;
+        }
     }
 
-    // Đăng xuất
+    $title = "Shop Online - Đăng ký";
+    $view = 'auth/register.php';
+    require_once './views/layout.php';
+}
+
     public function logout()
     {
-        // Xóa session
         session_destroy();
         $_SESSION['success'] = "Đăng xuất thành công!";
         header('Location: index.php');
         exit;
     }
 
-    // Kiểm tra quyền admin
     public static function requireAdmin()
     {
         if (!isset($_SESSION['user_id'])) {
@@ -161,7 +143,6 @@ class AuthController
         }
     }
 
-    // Kiểm tra đã đăng nhập
     public static function requireLogin()
     {
         if (!isset($_SESSION['user_id'])) {
@@ -171,7 +152,6 @@ class AuthController
         }
     }
 
-    // Kiểm tra quyền user
     public static function requireUser()
     {
         if (!isset($_SESSION['user_id'])) {
@@ -181,4 +161,4 @@ class AuthController
         }
     }
 }
-?> 
+?>

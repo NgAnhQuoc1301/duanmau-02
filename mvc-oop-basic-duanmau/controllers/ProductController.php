@@ -249,6 +249,28 @@ class ProductController
     $view = './views/admin/product/index.php'; 
     require_once './views/admin/layout.php';
 }
+public function Contact()
+{
+    $title = "Shop Online - Liên hệ";
+    $errors = [];
+    $success = '';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $phone = $_POST['phone'] ?? '';
+        $message = $_POST['message'] ?? '';
+
+        // Xác thực dữ liệu
+        if (empty($name)) $errors[] = "Tên không được để trống";
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Email không hợp lệ";
+        if (empty($phone) || !preg_match('/^[0-9]{10,11}$/', $phone)) $errors[] = "Số điện thoại không hợp lệ";
+        if (empty($message)) $errors[] = "Nội dung không được để trống";
+    }
+
+    $view = './views/contact.php';
+    require_once './views/layout.php';
+}
 
 }
 
