@@ -1,5 +1,4 @@
 <?php
-// Debug info
 if (!isset($products)) {
     echo "<div class='alert alert-warning'>Biến \$products không được định nghĩa!</div>";
     $products = [];
@@ -44,7 +43,6 @@ if (!isset($products)) {
                                 <td><?php echo number_format($product['price'], 0, ',', '.'); ?>đ</td>
                                 <td>
                                         <?php 
-                                        // Nếu không có sale_price trong db thì luôn hiển thị dấu "-" (có thể sửa nếu muốn)
                                         echo (isset($product['sale_price']) && $product['sale_price'] > 0) 
                                             ? number_format($product['sale_price'], 0, ',', '.') . 'đ' 
                                             : '-'; 

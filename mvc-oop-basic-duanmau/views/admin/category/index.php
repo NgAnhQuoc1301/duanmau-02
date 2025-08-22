@@ -6,7 +6,6 @@
         </a>
     </div>
     <div class="card-body">
-        <!-- Form tìm kiếm -->
         <form action="index.php" method="GET" class="mb-4">
             <input type="hidden" name="act" value="admin-categories">
             <div class="row g-3">
@@ -61,8 +60,6 @@
                 </tbody>
             </table>
         </div>
-        
-        <!-- Phân trang -->
         <?php if (isset($totalPages) && $totalPages > 1): ?>
         <nav aria-label="Page navigation" class="mt-4">
             <ul class="pagination justify-content-center">

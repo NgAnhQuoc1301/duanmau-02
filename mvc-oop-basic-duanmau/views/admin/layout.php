@@ -130,9 +130,7 @@
                 </div>
             </div>
             
-            <!-- Main content -->
             <div class="col-md-9 col-lg-10 content-wrapper">
-                <!-- Top navbar -->
                 <nav class="navbar navbar-expand-lg navbar-light mb-4">
                     <div class="container-fluid">
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
@@ -146,16 +144,13 @@
                             </ul>
                             <form class="d-flex" action="index.php" method="get">
                                 <input class="form-control me-2" name="keyword" type="search" placeholder="Tìm kiếm sản phẩm..." aria-label="Search" value="<?php echo $_GET['keyword'] ?? ''; ?>">
-                                <input type="hidden" name="act" value="search-product"> <!-- trỏ đến phương thức mới -->
+                                <input type="hidden" name="act" value="search-product"> 
                                 <button class="btn btn-outline-primary" type="submit">Tìm</button>
                             </form>
                         </div>
                     </div>
                 </nav>
-                
-                <!-- Content -->
                 <div class="container-fluid">
-                    <!-- Hiển thị thông báo lỗi nếu có -->
                     <?php if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])): ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <ul class="mb-0">
@@ -167,8 +162,6 @@
                         </div>
                         <?php unset($_SESSION['errors']); ?>
                     <?php endif; ?>
-                    
-                    <!-- Hiển thị thông báo thành công nếu có -->
                     <?php if (isset($_SESSION['success'])): ?>
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <?php echo $_SESSION['success']; ?>
@@ -176,15 +169,11 @@
                         </div>
                         <?php unset($_SESSION['success']); ?>
                     <?php endif; ?>
-                    
-                    <!-- Nội dung chính -->
                     <?php include_once $view; ?>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

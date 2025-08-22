@@ -7,8 +7,6 @@ class UserController
     {
         $this->modelUser = new UserModel();
     }
-
-    // Hiển thị danh sách user
     public function index()
     {
         AuthController::requireAdmin();
@@ -25,8 +23,6 @@ class UserController
         $view = './views/admin/user/index.php';
         require_once './views/admin/layout.php';
     }
-
-    // Thêm user mới
     public function create()
     {
         AuthController::requireAdmin();
@@ -35,8 +31,6 @@ class UserController
         $view = './views/admin/user/create.php';
         require_once './views/admin/layout.php';
     }
-
-    // Xử lý thêm người dùng mới
     public function store()
     {
         $username = trim($_POST['username'] ?? '');
@@ -79,8 +73,6 @@ class UserController
         header('Location: index.php?act=admin-users');
         exit;
     }
-
-    // Edit user
     public function edit()
     {
         AuthController::requireAdmin();
@@ -103,7 +95,7 @@ class UserController
     $id = $_POST['id'] ?? 0;
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
-    $role = $_POST['role'] ?? null; // role từ form
+    $role = $_POST['role'] ?? null; 
     $errors = [];
 
     if (!$id) $errors[] = "ID người dùng không hợp lệ";
@@ -116,16 +108,12 @@ class UserController
         header("Location: index.php?act=admin-user-edit&id=$id");
         exit;
     }
-
-    // Lấy user cũ
     $oldUser = $this->modelUser->getUserById($id);
     if (!$oldUser) {
         $_SESSION['errors'] = ["Người dùng không tồn tại"];
         header("Location: index.php?act=admin-users");
         exit;
     }
-
-    // Nếu role null thì giữ role cũ
     if (!$role) {
         $role = $oldUser['role'];
     }
@@ -152,7 +140,6 @@ public function profile() {
     $user = $_SESSION['user'] ?? null;
 
     if (!$user) {
-        // Lưu trang trước khi login vào session
         $_SESSION['redirect_after_login'] = "index.php?act=user-profile";
         header("Location: index.php?act=login");
         exit;

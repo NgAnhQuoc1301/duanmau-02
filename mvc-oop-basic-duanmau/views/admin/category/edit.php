@@ -22,6 +22,5 @@
     </div>
 </div>
 <?php
-// Xóa dữ liệu cũ sau khi hiển thị form
 unset($_SESSION['old_data']);
 ?>

@@ -2,15 +2,13 @@
 class CategoryController
 {
     public $modelCategory;
-    public $modelProduct; // thêm model Product để lấy sản phẩm theo category
+    public $modelProduct; 
 
     public function __construct()
     {
         $this->modelCategory = new CategoryModel();
         $this->modelProduct = new ProductModel();
     }
-
-    // Trang danh mục sản phẩm (frontend)
     public function view()
     {
         $id = $_GET['id'] ?? 0;
@@ -21,12 +19,8 @@ class CategoryController
             header('Location: index.php?act=products');
             exit;
         }
-
-        // Xử lý phân trang
         $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
         $limit = 9;
-
-        // Xử lý sắp xếp
         $sort = $_GET['sort'] ?? 'newest';
         switch($sort) {
             case 'price-asc': $orderBy = 'price ASC'; break;
@@ -36,11 +30,7 @@ class CategoryController
             case 'newest':
             default: $orderBy = 'created_at DESC'; break;
         }
-
-        // Lấy sản phẩm theo category + sắp xếp
         $products = $this->modelProduct->getProductsByCategory($id, $orderBy);
-
-        // Tổng số sản phẩm và phân trang
         $totalProducts = count($products);
         $totalPages = ceil($totalProducts / $limit);
         $products = array_slice($products, ($page - 1) * $limit, $limit);
@@ -48,8 +38,6 @@ class CategoryController
         $view = './views/frontend/category/view.php';
         require_once './views/frontend/layout.php';
     }
-
-    // Các hàm admin giữ nguyên (index, create, store, edit, update, delete)
     public function index()
     {
         $title = "Quản lý danh mục";

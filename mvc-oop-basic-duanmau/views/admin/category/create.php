@@ -32,8 +32,6 @@
     const preview = document.getElementById('image-preview');
     const previewImg = preview.querySelector('img');
     const resetBtn = document.getElementById('reset-btn');
-
-    // Hiển thị preview khi chọn file
     imageInput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
@@ -47,14 +45,11 @@
             preview.classList.add('d-none');
         }
     });
-
-    // Reset form và ẩn preview
     resetBtn.addEventListener('click', function() {
         preview.classList.add('d-none');
     });
 </script>
 
 <?php
-// Xóa dữ liệu cũ sau khi hiển thị form
 unset($_SESSION['old_data']);
 ?>

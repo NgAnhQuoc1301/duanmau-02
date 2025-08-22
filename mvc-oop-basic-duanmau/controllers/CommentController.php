@@ -11,8 +11,6 @@ class CommentController
         $this->modelProduct = new ProductModel();
         $this->modelUser = new UserModel();
     }
-
-    // Danh sách tất cả bình luận
     public function index()
     {
         $comments = $this->modelComment->getAllComments();
@@ -20,8 +18,6 @@ class CommentController
         $view = './views/admin/comment/index.php';
         require_once './views/admin/layout.php';
     }
-
-    // Bình luận chưa duyệt
     public function pending()
     {
         $comments = $this->modelComment->getPendingComments();
@@ -29,25 +25,20 @@ class CommentController
         $view = './views/admin/comment/pending.php';
         require_once './views/admin/layout.php';
     }
-
-    // Duyệt bình luận -> hiển thị vĩnh viễn
     public function approve()
 {
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if ($id > 0) {
-        $result = $this->modelComment->approveComment($id); // status=1
+        $result = $this->modelComment->approveComment($id); 
         if ($result) {
             $_SESSION['success'] = "Đã duyệt bình luận thành công!";
         } else {
             $_SESSION['errors'] = ["Không thể duyệt bình luận!"];
         }
     }
-    // Luôn quay lại trang quản lý bình luận
     header('Location: index.php?act=admin-comments');
     exit;
 }
-
-    // Từ chối bình luận (status=2)
     public function reject()
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -62,13 +53,11 @@ class CommentController
         header('Location: index.php?act=admin-comments');
         exit;
     }
-
-    // Xóa bình luận -> mất hẳn
     public function delete()
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if ($id > 0) {
-            $result = $this->modelComment->deleteComment($id); // delete vĩnh viễn
+            $result = $this->modelComment->deleteComment($id); 
             if ($result) {
                 $_SESSION['success'] = "Đã xóa bình luận thành công!";
             } else {
@@ -78,8 +67,6 @@ class CommentController
         header('Location: index.php?act=admin-comments');
         exit;
     }
-
-    // Chỉnh sửa bình luận
     public function edit()
     {
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
@@ -96,8 +83,6 @@ class CommentController
         header('Location: index.php?act=admin-comments');
         exit;
     }
-
-    // Cập nhật bình luận
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -131,8 +116,6 @@ class CommentController
         header('Location: index.php?act=admin-comments');
         exit;
     }
-
-    // Thêm bình luận ajax -> hiển thị ngay
     public function add()
     {
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 

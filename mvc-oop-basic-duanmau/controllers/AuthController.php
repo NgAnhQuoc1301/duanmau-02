@@ -64,7 +64,7 @@ class AuthController
     public function showRegister()
     {
         $title = "Shop Online - Đăng ký";
-        $view = './views/register.php'; // Đảm bảo đúng đường dẫn
+        $view = './views/register.php'; 
         require_once './views/layout.php';
     }
         public function register() {
@@ -73,8 +73,6 @@ class AuthController
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
-
-        // Xác thực dữ liệu
         $errors = [];
         if (empty($name)) $errors[] = "Họ và tên không được để trống";
         if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Email không hợp lệ";
@@ -83,22 +81,18 @@ class AuthController
         if (strlen($password) < 6) $errors[] = "Mật khẩu phải có ít nhất 6 ký tự";
 
         if (empty($errors)) {
-            // Mã hóa mật khẩu
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-            // Lưu vào database
             require_once './models/UserModel.php';
             $userModel = new UserModel();
             $data = [
                 'name' => $name,
                 'email' => $email,
                 'password' => $hashed_password,
-                'role' => 'user' // Giá trị mặc định cho role
+                'role' => 'user' 
             ];
             $result = $userModel->addUser($data);
 
             if ($result) {
-                // Đăng ký thành công, lưu session và chuyển hướng
                 $_SESSION['user_id'] = $result;
                 $_SESSION['user_name'] = $name;
                 header('Location: index.php?act=user-dashboard');
@@ -108,7 +102,6 @@ class AuthController
             }
         }
 
-        // Lưu dữ liệu cũ và lỗi để hiển thị lại form
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
             $_SESSION['old_data'] = $_POST;

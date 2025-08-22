@@ -28,9 +28,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Xóa phần Giá khuyến mãi nếu không có trong DB -->
-                        <!-- Nếu muốn giữ có thể dùng mặc định 0 hoặc để trống -->
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="sale_price" class="form-label">Giá khuyến mãi</label>
@@ -57,9 +54,6 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                    <!-- Xóa phần trạng thái nếu DB không có -->
-                    <!-- Nếu muốn giữ thì dùng mặc định 1 (Hiển thị) -->
                     <div class="mb-3">
                         <label for="status" class="form-label">Trạng thái</label>
                         <select class="form-select" id="status" name="status">
@@ -91,6 +85,6 @@
 </div>
 
 <?php
-// Xóa dữ liệu cũ sau khi hiển thị form
+
 unset($_SESSION['old_data']);
 ?>

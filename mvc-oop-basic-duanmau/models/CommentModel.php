@@ -10,8 +10,6 @@ class CommentModel
             throw new Exception("Không thể kết nối database");
         }
     }
-
-    // Lấy tất cả bình luận
     public function getAllComments()
     {
         $sql = "SELECT c.*, p.name as product_name, u.username as user_name 
@@ -23,8 +21,6 @@ class CommentModel
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
-    // Lấy bình luận chưa duyệt (status=0)
     public function getPendingComments()
     {
         $sql = "SELECT c.*, p.name as product_name, u.username as user_name 
@@ -37,8 +33,6 @@ class CommentModel
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
-    // Lấy bình luận theo id
     public function getCommentById($id)
     {
         $sql = "SELECT c.*, p.name as product_name, u.username as user_name 
@@ -51,8 +45,6 @@ class CommentModel
         $stmt->execute();
         return $stmt->fetch();
     }
-
-    // Lấy bình luận đã duyệt cho product-detail (status=1)
     public function getCommentsByProduct($product_id)
     {
         $sql = "SELECT c.*, u.username as user_name 
@@ -65,8 +57,6 @@ class CommentModel
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
-    // Thêm bình luận (mặc định status=0)
     public function addComment($user_id, $product_id, $content, $rating = 5)
     {
         $sql = "INSERT INTO comments (user_id, product_id, content, rating, status, created_at) 
@@ -78,8 +68,6 @@ class CommentModel
         $stmt->bindParam(':rating', $rating, PDO::PARAM_INT);
         return $stmt->execute();
     }
-
-    // Cập nhật bình luận
     public function updateComment($id, $content, $rating = 5, $status = 1)
     {
         $sql = "UPDATE comments 
@@ -92,26 +80,20 @@ class CommentModel
         $stmt->bindParam(':status', $status, PDO::PARAM_INT);
         return $stmt->execute();
     }
-
-    // Xóa bình luận vĩnh viễn
     public function deleteComment($id)
     {
-        $sql = "DELETE FROM comments WHERE id = :id"; // delete vĩnh viễn
+        $sql = "DELETE FROM comments WHERE id = :id"; 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-
-    // Duyệt bình luận (status=1)
     public function approveComment($id)
     {
-        $sql = "UPDATE comments SET status = 1 WHERE id = :id"; // set status=1
+        $sql = "UPDATE comments SET status = 1 WHERE id = :id"; 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-
-    // Từ chối bình luận (status=2)
     public function rejectComment($id)
     {
         $sql = "UPDATE comments SET status = 2 WHERE id = :id";
@@ -119,8 +101,6 @@ class CommentModel
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
     }
-
-    // Đếm số bình luận
     public function countComments($product_id = null)
     {
         $sql = "SELECT COUNT(*) as total FROM comments";
@@ -135,8 +115,6 @@ class CommentModel
         $result = $stmt->fetch();
         return $result['total'];
     }
-
-    // Lấy bình luận theo user
     public function getCommentsByUser($user_id, $limit = 5)
     {
         $sql = "SELECT c.*, p.name as product_name 
@@ -151,8 +129,6 @@ class CommentModel
         $stmt->execute();
         return $stmt->fetchAll();
     }
-
-    // Insert bằng array data
     public function insert($data) {
         $sql = "INSERT INTO comments (product_id, user_id, content, rating, created_at)
                 VALUES (:product_id, :user_id, :content, :rating, :created_at)";

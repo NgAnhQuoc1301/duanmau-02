@@ -57,14 +57,14 @@ class UserModel
 
     public function addUser($data) {
     try {
-        $stmt = $this->db->prepare("INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, :role)");
+        $stmt = $this->conn->prepare("INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, :role)");
         $stmt->execute([
             ':name' => $data['name'],
             ':email' => $data['email'],
             ':password' => $data['password'],
-            ':role' => $data['role'] // Thêm role từ dữ liệu
+            ':role' => $data['role'] 
         ]);
-        return $this->db->lastInsertId(); // Trả về ID của user vừa thêm
+        return $this->conn->lastInsertId();
     } catch (PDOException $e) {
         error_log("Lỗi thêm user: " . $e->getMessage());
         return false;
@@ -84,10 +84,10 @@ class UserModel
 
     public function login($email, $password)
     {
-        error_log("Kiểm tra đăng nhập: Email=$email"); // Debug log
+        error_log("Kiểm tra đăng nhập: Email=$email"); 
         $user = $this->getUserByEmail($email);
         if ($user) {
-            error_log("Tìm thấy user: ID={$user['id']}, Password (hashed)={$user['password']}"); // Debug log
+            error_log("Tìm thấy user: ID={$user['id']}, Password (hashed)={$user['password']}"); 
             if (password_verify($password, $user['password'])) {
                 error_log("Mật khẩu khớp, đăng nhập thành công");
                 return $user;

@@ -1,6 +1,6 @@
 <?php
 $errors = $_SESSION['errors'] ?? [];
-$old = $_SESSION['old_data'] ?? $user ?? []; // ưu tiên old_data khi submit lỗi
+$old = $_SESSION['old_data'] ?? $user ?? []; 
 unset($_SESSION['errors'], $_SESSION['old_data']);
 ?>
 

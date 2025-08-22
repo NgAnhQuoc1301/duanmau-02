@@ -30,18 +30,12 @@ class ProductController
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $limit = 12;
     $offset = ($page - 1) * $limit;
-
-    // Lấy giá trị filter từ GET
     $selectedCategories = isset($_GET['category']) ? $_GET['category'] : [];
     $selectedPrice = isset($_GET['priceRange']) ? $_GET['priceRange'] : null;
     $selectedRating = isset($_GET['rating']) ? $_GET['rating'] : null;
-
-    // Lấy tổng số sản phẩm (có filter)
     $productsFiltered = $this->modelProduct->getFilteredProducts($selectedCategories, $selectedPrice, $selectedRating, 100000, 0); 
     $totalProducts = count($productsFiltered);
     $totalPages = ceil($totalProducts / $limit);
-
-    // Lấy sản phẩm hiển thị trang hiện tại
     $products = $this->modelProduct->getFilteredProducts($selectedCategories, $selectedPrice, $selectedRating, $limit, $offset);
 
     $categories = $this->modelCategory->getAllCategories();
@@ -99,7 +93,6 @@ class ProductController
         require_once './views/layout.php';
     }
 
-    // ===== ADMIN PRODUCT MANAGEMENT =====
 
     public function adminProducts()
     {
@@ -126,8 +119,6 @@ class ProductController
             $description = $_POST['description'] ?? '';
             $category_id = $_POST['category_id'] ?? null;
             $status = $_POST['status'] ?? 1;
-
-            // Upload ảnh
             $imagePath = null;
             if (!empty($_FILES['image']['name'])) {
                 $fileName = time() . '_' . basename($_FILES['image']['name']);
@@ -235,7 +226,6 @@ class ProductController
         header('Location: index.php?act=admin-products');
         exit;
     }
-    // tìm kiếm sản phẩm
     public function searchProduct() {
     $keyword = $_GET['keyword'] ?? '';
 

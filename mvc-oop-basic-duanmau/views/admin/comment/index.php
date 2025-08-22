@@ -35,7 +35,6 @@
                                 <td>
                                     <div class="text-warning">
                                         <?php 
-                                        // Nếu có rating hợp lệ thì dùng, không thì random từ 1 đến 5
                                         $rating = (isset($comment['rating']) && $comment['rating'] > 0) 
                                                 ? (int)$comment['rating'] 
                                                 : rand(1,5);
